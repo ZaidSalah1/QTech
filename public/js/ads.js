@@ -1,44 +1,51 @@
 document.addEventListener("DOMContentLoaded", function () {
-    fetch('/ads')  // Fetch ads from DB
-        .then(response => response.json())
-        .then(data => {
-            const swiperContainer = document.querySelector('.swiper-wrapper');
-            swiperContainer.innerHTML = ''; // Clear existing slides if any
-            data.forEach(ad => {
-                // Add image to Swiper and Display Area
-                swiperContainer.innerHTML += `
-            <div class="swiper-slide ads-swiper-slide">
-                <a href="${ad.url_link || '#'}" target="_blank">
-                    <img src="${ad.image_url}" alt="Ad Image">
-                </a>
-            </div>
-            `;
-            });
-
-            // Reinitialize Swiper after the slides have been added
-            var swiper = new Swiper(".slide-swp", {
-                effect: 'coverflow',
-                grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                coverflowEffect: {
-                    rotate: 0,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 1, // Adjust this value to control the size difference
-                    slideShadows: false,
-                },
-                pagination: {
-                    el: ".swiper-pagination",
-                    dynamicBullests: true,
-                    clickable: true
-                },
-                autoplay: {
-                    delay: 2500,
-                }, loop: true
-            });
+    Promise.all([
+        fetch('/ads').then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load ads');
+            }
+            return response.json();
+        }),
+        fetch('/discountedProducts').then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load discounted products');
+            }
+            return response.json();
         })
-        .catch(error => console.error("Error fetching ads:", error));
+    ])
+    .then(([adsData, productsData]) => {
+        console.log('Fetched ads data:', adsData);
+        console.log('Fetched products data:', productsData);
+
+        // Process the ads data
+        if (Array.isArray(adsData)) {
+            // Update swiper with ads data
+            const swiperContainer = document.querySelector('.swiper-wrapper');
+            swiperContainer.innerHTML = '';
+            adsData.forEach(ad => {
+                swiperContainer.innerHTML += `
+                    <div class="swiper-slide ads-swiper-slide">
+                        <a href="${ad.url_link || '#'}" target="_blank">
+                            <img src="${ad.image_url}" alt="Ad Image">
+                        </a>
+                    </div>
+                `;
+            });
+        } else {
+            console.error('Ads data is not an array:', adsData);
+        }
+
+        // Process discounted products data
+        if (Array.isArray(productsData)) {
+            // Process products
+            console.log('Products data:', productsData);
+        } else {
+            console.error('Products data is not an array:', productsData);
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching data:", error.message);
+    });
 });
 
 
