@@ -1,84 +1,84 @@
 document.addEventListener("DOMContentLoaded", function () {
     Promise.all([
-        fetch('/ads').then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load ads');
-            }
-            return response.json();
-        }),
-        fetch('/discountedProducts').then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load discounted products');
-            }
-            return response.json();
-        })
+        fetch('/ads').then(res => res.json()),  
+        fetch('/ads/category-images').then(res => res.json())  
     ])
-    .then(([adsData, productsData]) => {
-        console.log('Fetched ads data:', adsData);
-        console.log('Fetched products data:', productsData);
+    .then(([adsData, categoryImagesData]) => {
+        console.log("Ads Data:", adsData);
+        console.log("Category Images Data:", categoryImagesData);
 
-        // Process the ads data
-        if (Array.isArray(adsData)) {
-            // Update swiper with ads data
-            const swiperContainer = document.querySelector('.swiper-wrapper');
-            swiperContainer.innerHTML = '';
-            adsData.forEach(ad => {
-                swiperContainer.innerHTML += `
-                    <div class="swiper-slide ads-swiper-slide">
-                        <a href="${ad.url_link || '#'}" target="_blank">
-                            <img src="${ad.image_url}" alt="Ad Image">
-                        </a>
-                    </div>
-                `;
-            });
-        } else {
-            console.error('Ads data is not an array:', adsData);
-        }
+        // ✅ Update Ads Swiper
+        updateAdsSwiper(adsData);
 
-        // Process discounted products data
-        if (Array.isArray(productsData)) {
-            // Process products
-            console.log('Products data:', productsData);
-        } else {
-            console.error('Products data is not an array:', productsData);
-        }
+        // ✅ Update Category Images
+        updateCategoryImages(categoryImagesData);
     })
     .catch(error => {
-        console.error("Error fetching data:", error.message);
+        console.error("Error fetching ads or category images:", error);
     });
 });
 
+function updateAdsSwiper(adsData) {
+    const swiperContainer = document.querySelector('.swiper-wrapper');
+    if (!swiperContainer) return;
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Fetch category images from the DB
-    fetch('/ads/category-images')
-        .then(response => response.json())
-        .then(data => {
-            console.log("Fetched category images:", data);  // Check if data is fetched correctly
-            if (data.length >= 2) {
-                const discountedImgContainer = document.querySelector('#section1 .categ_img');
-                const specialImgContainer = document.querySelector('#section2 .categ_img');
+    swiperContainer.innerHTML = ''; // Clear existing slides
 
-                console.log("Discounted Image Container:", discountedImgContainer);  // Check if container is selected
-                console.log("Special Image Container:", specialImgContainer);  // Check if container is selected
-
-                // Check if elements exist before modifying them
-                if (discountedImgContainer && specialImgContainer) {
-                    // Insert images into the respective containers
-                    discountedImgContainer.innerHTML = `
-                <a href="${data[0].url_link}">
-                    <img src="${data[0].image_url}" alt="Discounted Products">
+    adsData.forEach(ad => {
+        swiperContainer.innerHTML += `
+            <div class="swiper-slide ads-swiper-slide">
+                <a href="${ad.url_link || '#'}" target="_blank">
+                    <img src="${ad.image_url}" alt="Ad Image">
                 </a>
-            `;
-                    specialImgContainer.innerHTML = `
-                <a href="${data[1].url_link}">
-                    <img src="${data[1].image_url}" alt="Special Products">
-                </a>
-            `;
-                } else {
-                    console.error("Container elements not found.");
-                }
-            }
-        })
-        .catch(error => console.error("Error fetching category images:", error));
-});
+            </div>`;
+    });
+
+    // ✅ Reinitialize Swiper
+    new Swiper(".slide-swp", {
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            dynamicBullets: true,
+            clickable: true
+        },
+        autoplay: {
+            delay: 2500,
+        },
+        loop: true
+    });
+}
+
+function updateCategoryImages(categoryImagesData) {
+    if (!Array.isArray(categoryImagesData) || categoryImagesData.length < 2) {
+        console.error("Invalid category images data");
+        return;
+    }
+
+    const discountedImgContainer = document.querySelector('#section1 .categ_img');
+    const specialImgContainer = document.querySelector('#section2 .categ_img');
+
+    if (discountedImgContainer && specialImgContainer) {
+        discountedImgContainer.innerHTML = `
+            <a href="${categoryImagesData[0].url_link}">
+                <img src="${categoryImagesData[0].image_url}" alt="Discounted Products">
+            </a>
+        `;
+        specialImgContainer.innerHTML = `
+            <a href="${categoryImagesData[1].url_link}">
+                <img src="${categoryImagesData[1].image_url}" alt="Special Products">
+            </a>
+        `;
+    } else {
+        console.error("Container elements not found.");
+    }
+}
