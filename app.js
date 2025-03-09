@@ -19,7 +19,7 @@ const connection = mysql.createPool({
     password: process.env.DB_PASSWORD,  // (Your vPanel Password)
     database: process.env.DB_NAME,  // if0_38335742_QTech
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 5,
     queueLimit: 0
 });
 
