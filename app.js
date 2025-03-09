@@ -20,22 +20,28 @@ const connection = mysql.createConnection({
     password: '', // Fixed typo
     database: 'ecommerce store'
 });
-// const connection = mysql.createConnection({
-//     host: process.env.DB_HOST,  // Set by Render
-//     user: process.env.DB_USER,  // Set by Render
-//     password: process.env.DB_PASSWORD,  // Set by Render
-//     database: process.env.DB_NAME  // Set by Render
-// });
+const connection = mysql.createPool({
+    host: process.env.DB_HOST,  // Set by Render
+    user: process.env.DB_USER,  // Set by Render
+    password: process.env.DB_PASSWORD,  // Set by Render
+    database: process.env.DB_NAME,  // Set by Render
+    waitForConnections: true,
+    connectionLimit: 10,  // Maximum number of connections in the pool
+    queueLimit: 0  // Unlimited queue size
+});
 
 
-connection.connect((err) => {
+connection.getConnection((err, conn) => {
     if (err) {
         console.log("Error connection: ", err.stack);
         return;
     } else {
         console.log("Connected!!!");
+        conn.release();  // Make sure to release the connection back to the pool
     }
 });
+
+
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, "public")));
