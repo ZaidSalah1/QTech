@@ -956,124 +956,138 @@ app.put("/updateProduct2/:id", (req, res) => {
 
     updateValues.push(productId);
 
-    connection.beginTransaction((err) => {
+    connection.getConnection((err, conn) => {
         if (err) {
-            console.error("Error starting transaction: ", err);
+            console.error("Error getting connection: ", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
 
-        if (updateFields.length > 0) {
-            const updateProductSql = `UPDATE products SET ${updateFields.join(", ")} WHERE id = ?;`;
+        conn.beginTransaction((err) => {
+            if (err) {
+                conn.release();
+                console.error("Error starting transaction: ", err);
+                return res.status(500).json({ message: "Internal Server Error" });
+            }
 
-            connection.query(updateProductSql, updateValues, (err, results) => {
+            if (updateFields.length > 0) {
+                const updateProductSql = `UPDATE products SET ${updateFields.join(", ")} WHERE id = ?;`;
+
+                conn.query(updateProductSql, updateValues, (err, results) => {
+                    if (err) {
+                        return conn.rollback(() => {
+                            conn.release();
+                            console.error("Error updating product: ", err);
+                            res.status(500).json({ message: "Internal Server Error" });
+                        });
+                    }
+                    if (results.affectedRows === 0) {
+                        return conn.rollback(() => {
+                            conn.release();
+                            res.status(404).json({ message: "Product not found" });
+                        });
+                    }
+
+                    handleImages(conn);
+                });
+            } else {
+                handleImages(conn);
+            }
+        });
+
+        function handleImages(conn) {
+            if (!images || images.length === 0) {
+                return deleteAllImages(conn);
+            }
+
+            const fetchExistingImagesSql = `SELECT image_url FROM product_images WHERE product_id = ?;`;
+            conn.query(fetchExistingImagesSql, [productId], (err, results) => {
                 if (err) {
-                    return connection.rollback(() => {
-                        console.error("Error updating product: ", err);
+                    return conn.rollback(() => {
+                        conn.release();
+                        console.error("Error fetching existing images: ", err);
                         res.status(500).json({ message: "Internal Server Error" });
                     });
                 }
-                if (results.affectedRows === 0) {
-                    return connection.rollback(() => {
-                        res.status(404).json({ message: "Product not found" });
+
+                const existingImages = new Set(results.map(row => row.image_url));
+                const newImages = new Set(images);
+
+                const imagesToRemove = [...existingImages].filter(img => !newImages.has(img));
+                const imagesToInsert = [...newImages].filter(img => !existingImages.has(img));
+
+                if (imagesToRemove.length > 0) {
+                    deleteImages(conn, imagesToRemove, () => insertNewImages(conn, imagesToInsert));
+                } else {
+                    insertNewImages(conn, imagesToInsert);
+                }
+            });
+        }
+
+        function deleteAllImages(conn) {
+            const deleteImagesSql = `DELETE FROM product_images WHERE product_id = ?;`;
+            conn.query(deleteImagesSql, [productId], (err) => {
+                if (err) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        console.error("Error deleting images: ", err);
+                        res.status(500).json({ message: "Internal Server Error" });
+                    });
+                }
+                commitTransaction(conn, "Product updated successfully (all images removed)");
+            });
+        }
+
+        function deleteImages(conn, imagesToRemove, callback) {
+            const deleteImagesSql = `DELETE FROM product_images WHERE product_id = ? AND image_url IN (?);`;
+            conn.query(deleteImagesSql, [productId, imagesToRemove], (err) => {
+                if (err) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        console.error("Error deleting images: ", err);
+                        res.status(500).json({ message: "Internal Server Error" });
+                    });
+                }
+                callback();
+            });
+        }
+
+        function insertNewImages(conn, imagesToInsert) {
+            if (imagesToInsert.length === 0) {
+                return commitTransaction(conn, "Product updated successfully (no new images)");
+            }
+
+            const insertImagesSql = `INSERT INTO product_images (product_id, image_url) VALUES ?;`;
+            const imageValues = imagesToInsert.map(imageUrl => [productId, imageUrl]);
+
+            conn.query(insertImagesSql, [imageValues], (err) => {
+                if (err) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        console.error("Error inserting images: ", err);
+                        res.status(500).json({ message: "Internal Server Error" });
                     });
                 }
 
-                handleImages();
+                commitTransaction(conn, "Product and images updated successfully");
             });
-        } else {
-            handleImages();
+        }
+
+        function commitTransaction(conn, message) {
+            conn.commit((err) => {
+                if (err) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        console.error("Error committing transaction: ", err);
+                        res.status(500).json({ message: "Internal Server Error" });
+                    });
+                }
+                conn.release();
+                res.json({ message });
+            });
         }
     });
-
-    function handleImages() {
-        if (!images || images.length === 0) {
-            return deleteAllImages();
-        }
-
-        const fetchExistingImagesSql = `SELECT image_url FROM product_images WHERE product_id = ?;`;
-        connection.query(fetchExistingImagesSql, [productId], (err, results) => {
-            if (err) {
-                return connection.rollback(() => {
-                    console.error("Error fetching existing images: ", err);
-                    res.status(500).json({ message: "Internal Server Error" });
-                });
-            }
-
-            const existingImages = new Set(results.map(row => row.image_url));
-            const newImages = new Set(images);
-
-            // **Images to remove** (exist in DB but not in new list)
-            const imagesToRemove = [...existingImages].filter(img => !newImages.has(img));
-
-            // **Images to insert** (exist in new list but not in DB)
-            const imagesToInsert = [...newImages].filter(img => !existingImages.has(img));
-
-            if (imagesToRemove.length > 0) {
-                deleteImages(imagesToRemove, () => insertNewImages(imagesToInsert));
-            } else {
-                insertNewImages(imagesToInsert);
-            }
-        });
-    }
-
-    function deleteAllImages() {
-        const deleteImagesSql = `DELETE FROM product_images WHERE product_id = ?;`;
-        connection.query(deleteImagesSql, [productId], (err) => {
-            if (err) {
-                return connection.rollback(() => {
-                    console.error("Error deleting images: ", err);
-                    res.status(500).json({ message: "Internal Server Error" });
-                });
-            }
-            commitTransaction("Product updated successfully (all images removed)");
-        });
-    }
-
-    function deleteImages(imagesToRemove, callback) {
-        const deleteImagesSql = `DELETE FROM product_images WHERE product_id = ? AND image_url IN (?);`;
-        connection.query(deleteImagesSql, [productId, imagesToRemove], (err) => {
-            if (err) {
-                return connection.rollback(() => {
-                    console.error("Error deleting images: ", err);
-                    res.status(500).json({ message: "Internal Server Error" });
-                });
-            }
-            callback();
-        });
-    }
-
-    function insertNewImages(imagesToInsert) {
-        if (imagesToInsert.length === 0) {
-            return commitTransaction("Product updated successfully (no new images)");
-        }
-
-        const insertImagesSql = `INSERT INTO product_images (product_id, image_url) VALUES ?;`;
-        const imageValues = imagesToInsert.map(imageUrl => [productId, imageUrl]);
-
-        connection.query(insertImagesSql, [imageValues], (err) => {
-            if (err) {
-                return connection.rollback(() => {
-                    console.error("Error inserting images: ", err);
-                    res.status(500).json({ message: "Internal Server Error" });
-                });
-            }
-
-            commitTransaction("Product and images updated successfully");
-        });
-    }
-
-    function commitTransaction(message) {
-        connection.commit((err) => {
-            if (err) {
-                return connection.rollback(() => {
-                    console.error("Error committing transaction: ", err);
-                    res.status(500).json({ message: "Internal Server Error" });
-                });
-            }
-            res.json({ message });
-        });
-    }
 });
+
 
 
 app.get('/productDetails', (req, res) => {
