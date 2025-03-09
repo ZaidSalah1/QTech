@@ -30,9 +30,22 @@ connection.getConnection((err, conn) => {
     if (err) {
         console.log("Error connection: ", err.stack);
         return;
-    } else {
-        console.log("Connected!!!");
-        conn.release();  // Make sure to release the connection back to the pool
+    }
+
+    try {
+        // Perform your database operations here
+        conn.query('SELECT * FROM products', (err, results) => {
+            if (err) {
+                console.log('Error executing query:', err);
+            } else {
+                console.log('Query results:', results);
+            }
+        });
+    } catch (error) {
+        console.log("Error during query execution: ", error);
+    } finally {
+        // Always release the connection in the finally block
+        conn.release();  // This will execute regardless of whether there was an error or not
     }
 });
 
