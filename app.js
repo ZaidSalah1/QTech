@@ -13,13 +13,6 @@ const BASE_URL = process.env.BASE_URL || ""; // Define a base URL from env varia
 
 app.use(express.json());
 
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '', // Fixed typo
-    database: 'ecommerce store'
-});
 const connection = mysql.createPool({
     host: process.env.DB_HOST,  // Set by Render
     user: process.env.DB_USER,  // Set by Render
