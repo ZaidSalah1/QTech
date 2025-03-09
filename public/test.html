@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Dropdown</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* Dropdown Container */
+        .language-dropdown {
+            position: relative;
+            display: inline-block;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Dropdown Button */
+        .dropdown-btn {
+            background: #f8f8f8;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dropdown-btn i {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Dropdown Menu (Hidden by Default) */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 150px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            /* Hidden by default */
+            z-index: 1000;
+        }
+
+        /* Dropdown Items */
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="language-dropdown">
+        <div class="dropdown-btn">English <i class="fa-solid fa-caret-down"></i></div>
+        <div class="dropdown-menu">
+            <a href="#" data-lang="en">English</a>
+            <a href="#" data-lang="fr">Arabic (العربية)</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdownBtn = document.querySelector(".dropdown-btn");
+            const dropdownMenu = document.querySelector(".dropdown-menu");
+
+            // Toggle dropdown on button click
+            dropdownBtn.addEventListener("click", function (event) {
+                dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+                event.stopPropagation(); // Prevents the event from closing immediately
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function (event) {
+                if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QTech</title>
+    <link rel="icon" type="image/png" href="img/store icon.png">
+    <!--File Css-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/fav.css">
+    <link rel="stylesheet" href="css/header.css">
+    <!--Font Awesom-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <img class="WhatsApp_icon" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="">
+
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+
+
+</head>
+
+<body>
+
+    <div id="desktopHeader"></div>
+    <div id="mobileHeader"></div>
+
+
+    <!-- <div class="features_row">
+        <div class="feature1">
+            <img src="img/features1.png" alt="">
+            <div class="feature_text">
+                <h1>Free Shipping</h1>
+                <p>Free Shippin on all order</p>
+            </div>
+        </div>
+
+        <div class="feature1">
+            <img src="img/features2.png" alt="">
+            <div class="feature_text">
+                <h1>Money Guarantee</h1>
+                <p>30 Day Money Back Guarantee</p>
+            </div>
+        </div>
+
+        <div class="feature1">
+            <img src="img/features3.png" alt="">
+            <div class="feature_text">
+                <h1>Online Support 24/7</h1>
+                <p>Technical Support Stand By</p>
+            </div>
+        </div>
+
+        <div class="feature1">
+            <img src="img/features4.png" alt="">
+            <div class="feature_text">
+                <h1>Secure Payment</h1>
+                <p>All Payment Method Are Accepted</p>
+            </div>
+        </div>
+
+        <div class="feature1">
+            <img src="img/features5.png" alt="">
+            <div class="feature_text">
+                <h1>Member Discount</h1>
+                <p>Upto 40% Discount All Product</p>
+            </div>
+        </div>
+
+    </div> -->
+
+
+    <div class="cart">
+        <div class="top_cart">
+            <h3>My Cart <span class="top_items_count">(0 Item in Cart)</span></h3>
+            <span onclick="close_cart()" class="close_cart"><i class="fa-regular fa-circle-xmark"></i></span>
+        </div>
+
+        <div class="items_in_cart">
+
+        </div>
+
+        <div class="bottom_cart">
+            <div class="total">
+                <p>Cart Subtotal</p>
+                <p class="price_cart_total">$0</p>
+            </div>
+            <div class="button_cart">
+                <a href="checkout.html" class="btn_cart">Proceed to checkout</a>
+                <button class="btn_cart trans-bg">Shop More</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="fav_products" id="fav_products">
+
+    </div>
+
+    <section class="all_products">
+        <div class="container">
+
+
+            <div id="products_dev" class="products_dev">
+
+            </div>
+        </div>
+    </section>
+
+    <!-- favorites -->
+    <script>
+        var favorites = localStorage.getItem('favorites');
+        const products_dev = document.getElementById('products_dev');
+
+        console.log(favorites);
+    </script>
+
+
+    <div id="footerContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("components/footer.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("footerContainer").innerHTML = data;
+                })
+                .catch(error => console.error("Error loading footer:", error));
+        });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    </script>
+
+
+    <div id="splash-screen">
+        <img src="img/logov2.png" alt="Splash Image">
+    </div>
+
+    <script>
+        // Add this script at the end of your HTML or in a separate JS file
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                const splashScreen = document.getElementById('splash-screen');
+                if (splashScreen) {
+                    splashScreen.style.display = 'none';
+                }
+            }, 300); // 1000 milliseconds = 1 second
+        });
+
+    </script>
+
+    <!-- <script src="js/items_home.js" type="module"></script> -->
+    <!-- <script src="js/main.js"></script> -->
+    <!-- <script src="js/index.js"></script> -->
+    <script src="js/cookie.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/header.js"></script>
+</body>
+
+</html>

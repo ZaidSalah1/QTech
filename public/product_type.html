@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QTech</title>
+    <link rel="icon" type="image/png" href="img/store icon.png">
+    <!--File Css-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/all_product.css">
+    <link rel="stylesheet" href="css/header.css">
+    <!--Font Awesom-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div id="splash-screen">
+        <img src="img/logov2.png" alt="Splash Image">
+    </div>
+
+    <div id="desktopHeader"></div>
+    <div id="mobileHeader"></div>
+
+
+    <script>
+        // Function to dynamically load the menu content
+        document.addEventListener("DOMContentLoaded", function () {
+            loadMenu();
+        });
+
+        function loadMenu() {
+            const menuContainer = document.getElementById('menuContainer');
+            fetch('menu.html')
+                .then(response => response.text())
+                .then(data => {
+                    menuContainer.innerHTML = data;
+                    // After the menu is loaded, initialize it
+                    initializeMenu(); // This will be loaded from the included menu.js
+                })
+                .catch(error => {
+                    console.error('Error loading the menu:', error);
+                });
+        }
+    </script>
+
+
+
+    <div class="cart">
+        <div class="top_cart">
+            <h3>My Cart <span class="top_items_count">(0 Item in Cart)</span></h3>
+            <span onclick="close_cart()" class="close_cart"><i class="fa-regular fa-circle-xmark"></i></span>
+        </div>
+
+        <div class="items_in_cart">
+
+        </div>
+
+        <div class="bottom_cart">
+            <div class="total">
+                <p>Cart Subtotal</p>
+                <p class="price_cart_total">$0</p>
+            </div>
+            <div class="button_cart">
+                <a href="checkout.html" class="btn_cart">Proceed to checkout</a>
+                <button class="btn_cart trans-bg">Shop More</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <section class="all_products">
+        <div class="container">
+
+            <span onclick="open_close_filter()" class="btn_filter">
+                Filter <i class="fa-solid fa-filter"></i>
+            </span>
+
+            <!-- <div class="filter">
+                <h2>Filter</h2>
+
+                <div class="filter_item">
+                    <h4>categorie</h4>
+                    <div class="content">
+
+                        <div class="item">
+                            <span>Labtop</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>CPU</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>graphics card (GPU)</span>
+                            <input type="checkbox">
+                        </div> 
+
+                        <div class="item">
+                            <span>RAM</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>SSD</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Cooling</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Power Supply</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>PC Cases</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>HDD</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Storage</span>
+                            <input type="checkbox">
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="filter_item">
+                    <h4>Brand</h4>
+                    <div class="content">
+
+                        <div class="item">
+                            <span>MSI</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Asus</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Razer</span>
+                            <input type="checkbox">
+                        </div> 
+
+                        <div class="item">
+                            <span>Cooler Master</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Gigabyte</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Aorus</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Corsair</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>XPG</span>
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="item">
+                            <span>Samsung</span>
+                            <input type="checkbox">
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+            </div> -->
+
+            <div id="products_dev" class="products_dev">
+
+            </div>
+        </div>
+
+        <!-- <div class="pagination">
+            <span class="btn_page prev"><i class="fa-solid fa-backward-step"></i></span>
+            <a href=""><span class="num_page active">1</span></a>
+            <a href=""><span class="num_page">2</span></a>
+            <a href=""><span class="num_page">3</span></a>
+            <span class="btn_page next"><i class="fa-solid fa-forward-step"></i></span>
+
+        </div> -->
+
+
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const typeId = urlParams.get("type_id");
+
+            if (typeId) {
+                fetch(`/getProductsByType/${typeId}`)
+                    .then(response => response.json())
+                    .then(products => {
+                        console.log(products);
+                        displayProducts(products);
+                    })
+                    .catch(error => console.error("Error fetching products:", error));
+            }
+        })
+
+
+        function displayProducts(products) {
+            const products_dev = document.getElementById('products_dev');
+            products_dev.innerHTML = ""; // Clear existing products
+
+            products.forEach(product => {
+                // Ensure images field is properly handled
+                const images = product.images ? product.images.split(",") : []; // Convert to array
+                let img1 = images.length > 0 ? images[0] : 'default.jpg'; // First image or default
+                let img2 = images.length > 1 ? images[1] : img1; // Second image or fallback to first
+
+                let priceHTML = `
+            <div class="price">
+                <p><span>₪${product.price}</span></p>
+            </div>
+        `;
+                if (product.discount && product.discount < product.price && product.discount != 0) {
+                    priceHTML = `
+                <div class="price">
+                    <p class="discounted_price">₪${product.discount}</p>
+                    <p class="old_price"><s>₪${product.price}</s></p>
+                </div>           
+            `;
+                }
+
+                const isSoldOut = !product.quantity || product.quantity <= 0;
+
+                products_dev.innerHTML += `
+            <div class="product swiper-slide" onclick="location.href='item.html?id=${product.id}'">
+                <div class="icons">
+                    ${isSoldOut ? '' : `<span><i onclick="addToCart('${product.id}', this); event.stopPropagation();" class="fa-solid fa-cart-plus"></i></span>`}
+                    <span><i onclick="addToFav('${product.id}', this); event.preventDefault(); event.stopPropagation();" class="fa-solid fa-heart"></i></span>
+                    <span><i class="fa-solid fa-share"></i></span>
+                </div>
+                
+                <div class="img_product">
+                    <img src="${img1}" alt="${product.name}">
+                    <img class="img_hover" src="${img2}" alt="${product.name}">
+                </div>
+
+                <h3 class="name_product"><a>${product.name}</a></h3>
+
+                <div class="stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <span>0 Review(s)</span>
+                </div>
+
+                ${priceHTML}
+
+                ${isSoldOut ? `<div class="sold_out"><p>Sold Out</p></div>` : ''}
+            </div>
+        `;
+            });
+        }
+
+
+    </script>
+
+    <!-- Place this where you want to load the footer -->
+    <div id="footer-container"></div>
+
+    <script>
+        fetch('components/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+
+                // Now add the scroll and click event listener
+                const backToTopButton = document.querySelector('.back_to_top');
+
+                // When the user scrolls down 100px from the top of the document, show the button
+                window.onscroll = function () {
+                    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                        backToTopButton.style.display = "block";
+                    } else {
+                        backToTopButton.style.display = "none";
+                    }
+                };
+
+                // When the user clicks on the button, scroll to the top
+                backToTopButton.addEventListener('click', function () {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'  // Smooth scroll
+                    });
+                });
+            })
+            .catch(error => console.error('Error loading footer:', error));
+    </script>
+
+
+    <script>
+        window.onload = function () {
+            const storedCart = localStorage.getItem('cartItems');
+            if (storedCart) {
+                product_cart = JSON.parse(storedCart);
+                getCartItems();
+            }
+        };
+    </script>
+
+    <script>
+        // Add this script at the end of your HTML or in a separate JS file
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                const splashScreen = document.getElementById('splash-screen');
+                if (splashScreen) {
+                    splashScreen.style.display = 'none';
+                }
+            }, 500); // 1000 milliseconds = 1 second
+        });
+
+    </script>
+
+    <script src="js/components/menu.js"></script>
+    <script src="js/cookie.js"></script>
+    <script src="js/header.js"></script>
+
+    
+</body>
+
+</html>

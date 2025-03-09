@@ -1,0 +1,183 @@
+<header class="mobile">
+    <div class="container top-nav">
+        <div class="cookieItem">
+            <div class="cart_header">
+                <div class="icon_fav" onclick="openFavPage()">
+                    <i class="fa-solid fa-heart"></i>
+                    <span class="count_fav_mobile">0</span>
+                </div>
+            </div>
+            <div class="cart_header">
+                <div onclick="open_cart()" class="icon_cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="count_item_mobile">0</span>
+                </div>
+            </div>
+            <div class="searchContainer">
+                <form id="searchFormMobile" action="search_results.html" class="search">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </form>
+                <div class="searchDropdown"></div>
+            </div>
+            <div class="menuMobile">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </div>
+    <nav>
+        <div class="links container">
+            <div class="language-dropdown">
+                <div class="dropdown-btn">ENG<i class="fas fa-caret-down"></i></div>
+                <div class="dropdown-menu">
+                    <a href="#" data-lang="en">English</a>
+                    <a href="#" data-lang="fr">Arabic(العربية)</a>
+                </div>
+            </div>
+            <div id="loginSignupSection" class="loging_signup">
+                <a href="login.html">login <i class="fa-solid fa-right-to-bracket"></i></a>
+                <a href="#">sign up <i class="fa-solid fa-user-plus"></i></a>
+            </div>
+            <div id="logoutSection" class="loging_signup" style="display: none;">
+                <a href="#" id="">My Orders <i class="fa-solid fa-box-archive"></i></a>
+                <a href="#" id="logoutButton">logout <i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+<!-- Mobile Language Modal -->
+<div id="mobileLanguageModal" class="mobile-modal">
+    <div class="mobile-modal-content">
+        <span class="mobile-close-btn">&times;</span>
+        <i class="fa-solid fa-triangle-exclamation mobile-modal-icon"></i>
+        <p>عذرًا، اللغة العربية غير متاحة حاليًا.</p>
+        <button class="mobile-btn-close">حسنًا</button>
+    </div>
+</div>
+
+
+
+<div class="menuItems">
+
+    <div class="menuHeader">
+        <img src="img/logov2.png" width="150px" alt="">
+        <p><i class="fa-solid fa-arrow-left"></i> Menu</p>
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="all_product.html"><i class="fa-solid fa-box-archive"></i> All Products</a>
+        <a href="#"><i class="fa-solid fa-circle-info"></i> About US</a>
+        <a href="#"><i class="fa-solid fa-message"></i> Contact Us</a>
+    </div>
+
+    <div class="shopBy">
+        <h2><i class="fa-solid fa-bars"></i>Shop By</h2>
+        <a href="#">All Categories</a>
+        <a href="#">Best Seller Product</a>
+        <a href="#">New Arrivals</a>
+        <a href="#">top 10 Offers</a>
+        <a href="#">Phones & Tablet</a>
+        <a href="#">Electronics & Digits</a>
+        <a href="#">Fashion & Clothings</a>
+        <a href="#">Jewelry & Watches</a>
+        <a href="#">TV & Audio</a>
+    </div>
+
+</div>
+
+<!-- For Black BG -->
+<div class="overlay"></div>
+
+<style>
+    /* Mobile Modal Styles */
+.mobile-modal {
+    display: none;
+    position: fixed;
+    z-index: 5000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-modal-content {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    width: 85%;
+    max-width: 320px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.mobile-modal.show .mobile-modal-content {
+    transform: translateY(0);
+}
+
+/* Mobile Modal Icon */
+.mobile-modal-icon {
+    font-size: 50px;
+    color: #ff4c4c;
+    margin-bottom: 15px;
+}
+
+/* Mobile Modal Text */
+.mobile-modal-content p {
+    margin: 0 0 15px;
+    color: #222;
+    font-size: 20px;
+}
+
+/* Mobile Close Button */
+.mobile-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.mobile-close-btn:hover {
+    color: #ff4c4c;
+}
+
+/* Mobile-Friendly Button */
+.mobile-btn-close {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.mobile-btn-close:hover {
+    background: #d84343;
+}
+
+</style>

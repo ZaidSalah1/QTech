@@ -1,0 +1,582 @@
+
+header {
+    display: block;
+}
+
+header.mobile {
+    display: none;
+}
+
+header nav {
+    position: fixed;
+    /* Keeps it at the top */
+    width: 100%;
+    /* top: 0; */
+    left: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    /* Smooth opacity and transform transitions */
+    z-index: 999;
+    /* Ensure the nav stays above other elements */
+    background-color: #fff;
+}
+
+header .top-nav .search {
+    width: 550px;
+    border: 2px solid var(--main-color);
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+
+header .top-nav .search input {
+    padding: 18px 175px 18px 20px;
+    outline: none;
+    border: none;
+    /* width: 100%; */
+}
+
+header .top-nav .search button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    outline: none;
+    border: none;
+    width: 170px;
+    height: 100%;
+    font-size: 18px;
+    color: var(--dark-color);
+    background-color: var(--main-color);
+}
+
+
+.menuItems {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    /* Hide menu off-screen on the left */
+    width: 250px;
+    /* Adjust as needed */
+    height: 100%;
+    background: #f4f4f4;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    /* Optional for visual effect */
+    transition: left 0.3s ease-in-out;
+    /* Adjust for left-side sliding */
+    padding: 20px;
+    z-index: 7000;
+    overflow-y: scroll;
+}
+
+.menu-active {
+    left: 0;
+    /* Slide menu into view from the left */
+}
+
+
+.menuHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Adds space between the links */
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    /* You can adjust font-family as needed */
+}
+
+.menuHeader p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    /* Dark color for the title */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Space between the icon and text */
+}
+
+.menuHeader a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Space between the icon and the text */
+    font-size: 1.1rem;
+    color: #555;
+    /* Lighter color for links */
+    text-decoration: none;
+    /* Removes underline */
+    transition: color 0.3s ease;
+    /* Smooth color change on hover */
+}
+
+.menuHeader a:hover {
+    color: #0066c0;
+    /* Change color on hover */
+}
+
+.menuHeader a i {
+    font-size: 1.3rem;
+    /* Icon size */
+}
+
+.menuHeader p i {
+    font-size: 1.5rem;
+    /* Icon size for the Menu title */
+}
+
+.shopBy {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    /* Adds space between the links */
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    /* You can adjust font-family as needed */
+}
+
+.shopBy h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    /* Dark color for the title */
+    margin-bottom: 20px;
+    /* Space between the title and the links */
+}
+
+.shopBy a {
+    font-size: 1.1rem;
+    color: #555;
+    /* Lighter color for links */
+    text-decoration: none;
+    /* Removes underline */
+    transition: color 0.3s ease;
+    /* Smooth color change on hover */
+    padding: 8px 0;
+    /* Adds vertical padding to the links */
+}
+
+.shopBy a:hover {
+    color: #0066c0;
+    /* Change color on hover */
+}
+
+.shopBy a:active {
+    color: #004d99;
+    /* Darker color when clicked */
+}
+
+
+/* Background Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Black transparent background */
+    visibility: hidden;
+    /* Initially hidden */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 4999;
+}
+
+/* When sidebar is open, show overlay */
+.overlay-active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.menuMobile {
+    background-color: #fcb700;
+    height: 45px;
+    width: 95px;
+    text-align: center;
+    line-height: 45px;
+    border-radius: 10%;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 250px;
+    /* Keeps it from getting too wide */
+    padding: 0 15px;
+    /* Adds padding on both sides */
+    box-sizing: border-box;
+}
+
+
+.search-container input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    /* Space for the icon */
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    font-size: 16px;
+}
+
+.search-container .fa-search {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    cursor: pointer;
+}
+
+/* Dropdown Container */
+.language-dropdown {
+    position: relative;
+    display: inline-block;
+    font-family: Arial, sans-serif;
+}
+
+/* Dropdown Button */
+.dropdown-btn {
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-btn i {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Dropdown Menu for Langauge(Hidden by Default) */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+    /* Hidden by default */
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    color: black;
+    padding: 7px; /* Won't work properly without display: block */
+    display: block; /* Makes the padding work correctly */
+}
+
+
+
+/* Responsive Main Page*/
+header .links ul .bg_overlay,
+header .links .btn_open_menu,
+header .links ul .btn_close_menu,
+header .links ul .logo_menu {
+    display: none;
+}
+
+@media(max-width: 1100px) {
+    header .top-nav .search {
+        width: 420px;
+    }
+
+
+}
+
+@media(max-width: 950px) {
+
+    body {
+        margin-top: 260px;
+    }
+
+    
+    header .top-nav {
+        flex-wrap: wrap;
+        justify-content: end;
+        gap: 25px;
+        width: 95%;
+    }
+
+    .searchContainer {
+        width: 70%;
+    }
+
+    header .top-nav .search {
+        width: 95%;
+    }
+
+    .header .top-nav .cookieItem {
+        margin-top: 20px;
+    }
+
+    header .top-nav .search {
+        order: 3;
+        /* width: 80%; */
+        margin: 10px auto 0;
+    }
+
+
+    header .links {
+        padding: 20px 0;
+    }
+
+    header .links ul {
+        padding-top: 50px;
+        position: fixed;
+        top: 0;
+        left: -420px;
+        bottom: 0;
+        background: #fff;
+        flex-direction: column;
+        gap: 20px;
+        width: 400px;
+        border-right: 1px solid var(--border-color);
+        text-align: center;
+        transition: 0.3s ease;
+    }
+
+    header .links ul.active {
+        left: 0;
+    }
+
+    header .links ul .logo_menu {
+        width: 140px;
+        margin: 0px auto;
+        display: block;
+    }
+
+    header .links ul .btn_close_menu {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 40px;
+        color: var(--main-color);
+        display: block;
+    }
+
+    header .links .btn_open_menu {
+        display: block;
+    }
+
+    header .links ul .bg_overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100%;
+        background: #0000002b;
+        width: calc(100vw - 400px);
+        transition: 0.3s ease;
+    }
+
+    header .links ul.active .bg_overlay {
+        right: 0;
+    }
+
+    
+    footer .container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    footer .container .row {
+        width: 40%;
+        margin-bottom: 20px;
+    }
+
+    footer .container .big_row {
+        width: 50%;
+        margin-bottom: 20px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    header .top-nav .logo img {
+        display: none;
+    }
+
+    header .top-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+    }
+
+    .header .top-nav .cookieItem {
+        margin-top: 20px;
+    }
+
+    .newsletter .text {
+        width: 66%;
+    }
+
+    .newsletter .text h4 {
+        font-size: 22px;
+        font-weight: 650;
+    }
+
+    .newsletter .newsletter_form {
+        width: 85%;
+    }
+
+    
+
+}
+
+
+@media (max-width: 550px) {
+
+    
+    body {
+        margin-top: 190px;
+    }
+
+
+    .selections .container .type img {
+        width: 100%;
+    }
+
+    header {
+        display: none;
+        /* Hide the default header */
+    }
+
+    header.mobile {
+        display: block;
+        /* Show the mobile header */
+    }
+
+    header .top-nav .search {
+        margin: 0 !important;
+
+    }
+
+
+    .cart {
+        width: 100%;
+        right: -100%;
+    }
+
+    header .top-nav .logo img {
+        width: 85px;
+    }
+
+    .selections .container .type {
+        height: 270px;
+    }
+
+    header .top-nav .search button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        outline: none;
+        border: none;
+        width: 95px;
+        height: 100%;
+        font-size: 15px;
+        color: var(--dark-color);
+        background-color: var(--main-color);
+    }
+
+    header .top-nav .logo img {
+        display: none;
+    }
+
+    .search-container{
+        padding: 0px 0px;
+    }
+
+    header .top-nav .search input {
+        padding: 10px;
+        outline: none;
+        border: none;
+        width: 80%;
+    }
+
+    .item_detail .container {
+        display: flex;
+        /* justify-content: space-between; */
+        flex-direction: column;
+        gap: 30px;
+        /* max-width: 1200px; */
+        margin: 0 auto;
+    }
+
+    .product .img_product .img_hover,
+    .product .img_product img {
+        height: 175px;
+    }
+
+    .product .stars span,
+    .product .stars i{
+        font-size: 10px;
+    }
+
+    .product .name_product a {
+        font-size: 18px;
+    }
+
+    .item_detail .img_item {
+        width: unset;
+    }
+
+    .item_detail .details_item {
+        width: 100%;
+    }
+
+
+
+}
+
+@media(max-width: 375px) {
+    body {
+        width: 100%;
+    }
+
+    header .top-nav .cart_header .language {
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        font-size: 10px;
+        background: var(--main-color);
+        color: white;
+        padding: 1px 5px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    header .links .loging_signup a {
+        padding: 7px 7px;
+    }
+
+    header .top-nav .logo img {
+        display: none;
+    }
+
+    .searchContainer {
+        width: 100%;
+    }
+
+    header .top-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+    }
+
+}
+
+
+

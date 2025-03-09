@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <title>QTech Dashboard</title>
+    <link rel="icon" type="image/png" href="img/store icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/check-session")
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.isAuthenticated) {
+                        window.location.href = "/login.html"; // Redirect if not logged in
+                    } else {
+                        document.body.style.display = "block"; // Show content only if authenticated
+                    }
+                })
+                .catch(error => {
+                    console.error("Session check failed:", error);
+                    window.location.href = "/login.html";
+                });
+        });
+    </script>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+
+            <div class="menuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+
+            <div class="searchContainer">
+                <form action="" class="search">
+                    <input type="search" id="searchInput" placeholder="Search for product">
+                    <button type="submit">Search</button>
+                </form>
+                <div class="searchDropdown">
+
+                </div>
+            </div>
+
+            <a href="#" class="logo"><img src="img/logov2.png" alt=""></a>
+        </div>
+    </header>
+
+
+
+
+    <div class="menu">
+        <div class="container">
+            <div class="top_icon">
+                <h1><i class="fa-solid fa-cart-shopping"></i> Store</h1>
+            </div>
+
+            <div class="menu_item" id="dashboardMenu">
+                <h2><i class="fa-solid fa-chart-pie"></i> Dashboard</h2>
+            </div>
+
+            <div class="menu_item" id="productsMenu">
+                <h2><i class="fa-solid fa-box-archive"></i> Products</h2>
+
+            </div>
+
+            <div class="menu_item" id="orders">
+                <h2><i class="fa-solid fa-truck"></i> Orders <span class="msg" id="pendingCount">0</span></h2>
+            </div>
+
+            <div class="menu_item" id="customersMenu">
+                <h2><i class="fa-solid fa-users"></i> Customers</h2>
+            </div>
+
+            <div class="menu_item" id="adsMenu">
+                <h2><i class="fa-solid fa-image"></i> Ads Images</h2>
+            </div>
+
+
+            <div class="menu_item" id="messages">
+                <h2><i class="fa-solid fa-chart-pie"></i> Repoerts</h2>
+            </div>
+
+            <p>Help & Support</p>
+
+
+
+
+            <div class="menu_item" id="messages">
+                <h2><i class="fa-solid fa-gear"></i> Settings</h2>
+            </div>
+
+
+
+            <div class="menu_item" id="messages">
+                <h2><i class="fa-solid fa-arrow-right-from-bracket"></i> logout</h2>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Fetch the pending orders count
+        fetch('/pendingOrdersCount')
+            .then(response => response.json())
+            .then(data => {
+                const pendingCount = data.pendingCount;
+                document.getElementById('pendingCount').textContent = pendingCount;
+            })
+            .catch(error => {
+                console.error('Error fetching orders count:', error);
+            });
+
+        // Fetch the product count from the server
+        fetch("/productsCount")
+            .then(response => response.json())
+            .then(data => {
+                // Update the product count in the DOM
+                document.getElementById("productCount").textContent = data.product_count;
+            })
+            .catch(err => {
+                console.error("Error fetching product count:", err);
+                document.getElementById("productCount").textContent = "Error";
+            });
+
+        // Fetch the total orders count from the server
+        fetch("/orderTotal")
+            .then(response => response.json())
+            .then(data => {
+                // Update the total orders count in the DOM
+                document.getElementById("pageViewsCount").textContent = data.order_count;
+            })
+            .catch(err => {
+                console.error("Error fetching order count:", err);
+                document.getElementById("pageViewsCount").textContent = "Error";
+            });
+    </script>
+
+
+
+    <!-- Dashboard Section  -->
+    <div class="stats" id="stats">
+        <h1>DASHBOARD</h1>
+        <div class="row_stat">
+            <div class="products menu_item" id="productsCount">
+                <h1>Products <i class="fa-solid fa-box-archive"></i></h1>
+                <h1 class="count" id="productCount">??</h1>
+            </div>
+
+            <div class="view">
+                <h1>Total Orders <i class="fa-solid fa-truck-fast"></i></h1>
+                <h1><span id="pageViewsCount"></span></h1>
+            </div>
+
+            <div class="products">
+                <h1>Sales <i class="fa-solid fa-chart-line"></i></h1>
+                <h1 class="count">50</h1>
+            </div>
+
+            <div class="products">
+                <h1>Revenue <i class="fa-solid fa-dollar-sign"></i></h1>
+                <h1 class="count">$1000</h1>
+            </div>
+        </div>
+
+
+
+        <div class="charts-dashboard">
+            <h2>Sales Overview</h2>
+            <div class="chart_row">
+                <!-- Sales Line Chart -->
+                <div class="chart-container">
+                    <canvas id="salesChart2"></canvas>
+                    <p>Monthly Sales Overview</p>
+                </div>
+
+                <!-- Order Pie Chart -->
+                <div class="chart-container">
+                    <canvas id="orderChart"></canvas>
+                    <p>Order Status Overview</p>
+                    <div id="statusCounts">
+
+                    </div> <!-- Added to display status counts -->
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Customer</th>
+                        <th>Location</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <!-- Dynamic rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+
+        <script src="js/script.js"></script>
+
+    </div>
+
+
+<script>
+    // Function to fetch latest orders and populate the table
+    async function fetchLatestOrders() {
+        try {
+            const response = await fetch("/getLatestOrders");
+            const orders = await response.json();
+
+            const tableBody = document.getElementById("orders-table-body");
+
+            // Clear any existing table rows
+            tableBody.innerHTML = "";
+
+            orders.forEach(order => {
+                const row = document.createElement("tr");
+
+                // Format the order date
+                const orderDate = new Date(order.order_date);
+                const formattedDate = `${orderDate.getDate()} ${orderDate.toLocaleString('default', { month: 'short' })}, ${orderDate.getFullYear()}`;
+
+                // Create table cells and add data, including the total amount
+                row.innerHTML = `
+                    <td>${order.order_id}</td>
+                    <td class="profile">
+                        <img src="img/profile_icon.jpg" alt="profile"> ${order.user_name}
+                    </td>
+                    <td>${order.user_address}</td>
+                    <td>${formattedDate}</td>
+                    <td><span class="status ${order.status.toLowerCase()}">${order.status}</span></td>
+                    <td>$${order.total_amount.toFixed(2)}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        }
+    }
+
+    // Call the function to fetch and display the data when the page loads
+    window.onload = fetchLatestOrders;
+</script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".status-cell").forEach(cell => {
+                let statusText = cell.textContent.trim().toLowerCase(); // Get text & normalize
+
+                // Remove old status classes
+                cell.classList.remove("status-pending", "status-in-progress", "status-completed", "status-canceled");
+
+                // Apply new class based on status
+                if (statusText.includes("pending")) {
+                    cell.classList.add("status-pending");
+                } else if (statusText.includes("in progress")) {
+                    cell.classList.add("status-in-progress");
+                } else if (statusText.includes("completed")) {
+                    cell.classList.add("status-completed");
+                } else if (statusText.includes("canceled")) {
+                    cell.classList.add("status-canceled");
+                }
+            });
+        });
+
+        function getPendingOrder() {
+
+        }
+
+    </script>
+
+
+    <!-- Products Section -->
+    <div class="products-section" id="products-section" style="display: none;">
+
+        <h1>Products</h1>
+
+        <div class="top_options">
+            <div class="add_product">
+                <div class="add">
+                    <div class="plus">+</div>
+                </div>
+            </div>
+
+            <div class="filter">
+
+            </div>
+
+        </div>
+
+        <div id="products_dev" class="products_dev">
+            <!-- Product items will be added here dynamically -->
+
+
+        </div>
+    </div>
+
+
+    <div class="orders-section" id="orders-section" style="display: none">
+
+        <div class="order-list">
+
+        </div>
+    </div>
+
+
+    <div class="customers-section" id="customers-section">
+        <div class="container">
+            <h2>Customers</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fa-solid fa-user"></i> Name</th>
+                        <th><i class="fa-solid fa-envelope"></i> Email</th>
+                        <th><i class="fa-solid fa-phone"></i> Phone </th>
+                        <th><i class="fa-solid fa-award"></i> Rank</th>
+                        <th>$ Total</th>
+                    </tr>
+                </thead>
+                <tbody id="customerTableBody">
+                    <!-- Rows will be inserted here dynamically -->
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+
+    <div class="ads-section" id="ads-section">
+        <div class="container">
+            <h1>Advertisements</h1>
+            <h3>Main Ads</h3>
+            <div class="big_ads">
+
+                <span class="edit_main_ads"><i class="fa-regular fa-pen-to-square"></i></span>
+                <div class="swiper ads-swiper">
+                    <div class="swiper-wrapper">
+
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+
+
+            </div>
+
+            <div class="swiper pTypeMySwiper">
+                <div class="swiper-wrapper">
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('Case')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/case.png" alt="">
+                        <h1>Computer Cases</h1>
+                        <p>Product Counts 92</p>
+                    </div>
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('Laptop')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/labptops.png" alt="">
+                        <h1>Laptops</h1>
+                        <p>Product Counts 27</p>
+                    </div>
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('Graphics Card')">
+                        <!-- Added swiper-slide class -->
+                        <!-- <a href="product_type.html?type=GPU"></a> -->
+                        <img src="img/gpus2.png" alt="">
+                        <h1>Graphics Card</h1>
+                        <p>Product Counts 46</p>
+                    </div>
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('Coller')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/coolers.png" alt="">
+                        <h1>Collers</h1>
+                        <p>Product Counts 46</p>
+                    </div>
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('CPU')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/cpus.png" alt="">
+                        <h1>CPU's / Processors</h1>
+                        <p>Product Counts 58</p>
+                    </div>
+                    <div class="type swiper-slide" onclick="navigateToProductType('RAM')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/ram.png" alt="">
+                        <h1>Random Access Memory (RAM)</h1>
+                        <p>Product Counts 78</p>
+                    </div>
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('Motherboard')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/motherboards.png" alt="">
+                        <h1>Motherboards</h1>
+                        <p>Product Counts 28</p>
+                    </div>
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('Storage')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/storages.png" alt="">
+                        <h1>Storage</h1>
+                        <p>Product Counts 36</p>
+                    </div>
+
+                    <div class="type swiper-slide" onclick="navigateToProductType('Monitor')">
+                        <!-- Added swiper-slide class -->
+                        <img src="img/monitors.png" alt="">
+                        <h1>Monitors</h1>
+                        <p>Product Counts 46</p>
+                    </div>
+
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <section class="banner">
+                <input type="file" id="bannerFileInput" style="display: none;" accept="image/*">
+                <div class="bannerContainer">
+                    <!-- <div class="banner_img">
+                        <div class="image_wrapper">
+                            <img src="img/banner/banner-12.png" alt="">
+                            <span class="edit_banner_ads"><i class="fa-regular fa-pen-to-square"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="banner_img">
+                        <div class="image_wrapper">
+                            <img src="img/banner/banner-13.png" alt="">
+                            <span class="edit_banner_ads"><i class="fa-regular fa-pen-to-square"></i></span>
+                        </div>
+                    </div>  -->
+                </div>
+            </section>
+
+            <input type="file" id="cardFileInput" style="display: none;" accept="image/*">
+            <div class="cardAds">
+                <!-- <div class="cardImgContainer">
+                    <img class="cardImg" src="img/banner/zbanner2.png">
+                    <span class="editCardAd"><i class="fa-regular fa-pen-to-square"></i></span>
+                </div>
+
+                <div class="cardImgContainer2">
+                    <img class="cardImg2" src="img/banner/blue_banner.png">
+                    <span class="editCardAd"><i class="fa-regular fa-pen-to-square"></i></span>
+                </div> -->
+            </div>
+
+        </div>
+    </div>
+
+    <div class="edit_main_ads_window" id="edit_main_ads_window" style="display: none;">
+        <div class="container">
+
+            <div class="imgs_container">
+                <!-- <div class="main_ads_img">
+                    <img src="img/slider-01.jpg" width="150" alt="">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+
+                <div class="main_ads_img">
+                    <img src="img/slider-01.jpg" width="150" alt="">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+
+                <div class="main_ads_img">
+                    <img src="img/slider-01.jpg" width="150" alt="">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div> -->
+            </div>
+
+            <div class="add_main_ads_img">
+                <h2>Upload image</h2>
+                <div class="selected-ads-images">
+                    <div class="add-box" onclick="document.getElementById('mainAdsFileInput').click()">
+                        <span><i class="fa-solid fa-camera"></i></span>
+                    </div>
+
+                    <input type="file" id="mainAdsFileInput" style="display: none;" accept="image/*">
+                </div>
+            </div>
+
+            <button type="submit" class="btnAd">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- 📸📸📸📸 Edit Ads Images Start 📸📸📸📸 -->
+
+    <!-- 📢 Main Ads📢 -->
+    <script>
+        // Edit Main Ads📸
+        let adsImages = []; // Images from DB
+        let uploadedAdsImg = []; // Newly uploaded images
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/ads')  // Fetch ads from DB
+                .then(response => response.json())
+                .then(data => {
+                    const swiperContainer = document.querySelector('.swiper-wrapper');
+                    const imgsContainer = document.querySelector('.imgs_container');
+
+                    data.forEach(ad => {
+                        adsImages.push(ad.image_url); // Store DB images
+
+                        // Add image to Swiper and Display Area
+                        swiperContainer.innerHTML += `
+                    <div class="swiper-slide ads-swiper-slide" >
+                        <img src="${ad.image_url}" alt="Ad Image">
+                    </div>
+                `;
+
+                        imgsContainer.appendChild(createImageElement(ad.image_url, "db"));
+                    });
+                })
+                .catch(error => console.error("Error fetching ads:", error));
+        });
+
+
+
+        // Handle file selection
+        document.getElementById("mainAdsFileInput").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedAdsImg.push(file);
+                displayUploadedAdsImages();
+            }
+        });
+
+        // Function to create image elements (for both DB and uploaded images)
+        function createImageElement(imageSrc, type, index = null) {
+            const imgContainer = document.createElement("div");
+            imgContainer.classList.add("main_ads_img");
+
+            const img = document.createElement("img");
+            img.src = imageSrc;
+            img.width = 150;
+            img.alt = "Ad Image";
+
+            const deleteIcon = document.createElement("i");
+            deleteIcon.classList.add("fa-solid", "fa-trash-can");
+            deleteIcon.style.cursor = "pointer";
+
+            // Remove image from respective array and refresh UI
+            deleteIcon.addEventListener("click", function () {
+                if (type === "db") {
+                    adsImages = adsImages.filter(url => url !== imageSrc);
+                } else if (type === "upload" && index !== null) {
+                    uploadedAdsImg.splice(index, 1);
+                }
+                displayUploadedAdsImages();
+            });
+
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(deleteIcon);
+
+            return imgContainer;
+        }
+
+        // Display uploaded and DB images together
+        function displayUploadedAdsImages() {
+            const imgsContainer = document.querySelector(".imgs_container");
+            imgsContainer.innerHTML = ""; // Clear container
+
+            // Re-display DB images
+            adsImages.forEach(url => {
+                imgsContainer.appendChild(createImageElement(url, "db"));
+            });
+
+            // Re-display uploaded images
+            uploadedAdsImg.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imgsContainer.appendChild(createImageElement(e.target.result, "upload", index));
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Handle Upload Button Click
+        document.querySelector('.btnAd').addEventListener('click', async () => {
+            if (uploadedAdsImg.length > 0 || adsImages.length > 0) {
+                const uploadedAdsImgURL = [];
+
+                // Upload new images to the server
+                for (const file of uploadedAdsImg) {
+                    const formData = new FormData();
+                    formData.append("file", file);
+
+                    try {
+                        const response = await fetch("upload-ads-image", { method: "POST", body: formData });
+                        const data = await response.json();
+
+                        if (data.url) {
+                            uploadedAdsImgURL.push(data.url);
+                        }
+                    } catch (error) {
+                        console.error("Error uploading image:", error);
+                    }
+                }
+
+                // Combine DB images + newly uploaded image URLs
+                const allAdsImages = [...adsImages, ...uploadedAdsImgURL];
+
+                const formDataToSend = {
+                    ad_type: "big",
+                    uploadedAdsImgURL: allAdsImages
+                };
+
+                const response = await fetch("/upload-ads", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formDataToSend)
+                });
+
+                const data = await response.json();
+                console.log("Success:", data);
+            }
+        });
+
+
+    </script>
+
+
+    <script>
+        var adsSwiper = new Swiper(".ads-swiper", {
+            effect: 'coverflow',
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2, // Adjust this value to control the size difference
+                slideShadows: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                type: "fraction",
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            initialSlide: 1,
+        });
+
+        window.addEventListener("resize", function () {
+            adsSwiper.update();
+        });
+
+        var swiper = new Swiper(".pTypeMySwiper", {
+            slidesPerView: 3,
+            spaceBetween: 30,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+    </script>
+
+    <!-- 📢 Banner Ads 📢 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/bannerAds')
+                .then(response => response.json())
+                .then(data => {
+                    const bannerContainer = document.querySelector('.bannerContainer');
+                    data.forEach(banner => {
+                        bannerContainer.innerHTML += `
+                    <div class="banner_img" data-banner-id="${banner.id}">
+                        <div class="image_wrapper">
+                            <img src="${banner.image_url}" alt="">
+                            <span class="edit_banner_ads"><i class="fa-regular fa-pen-to-square"></i></span>
+                        </div>
+                    </div>
+                `;
+                    });
+
+                    // Select all the edit icons
+                    const editIcons = document.querySelectorAll('.edit_banner_ads');
+                    const fileInput = document.getElementById('bannerFileInput'); // File input for image selection
+
+                    // Add click event to each edit icon
+                    editIcons.forEach(icon => {
+                        icon.addEventListener('click', function () {
+                            // Trigger the file input when the edit icon is clicked
+                            fileInput.click();
+
+                            // Store the clicked image element (which will be updated later)
+                            fileInput.addEventListener('change', function (event) {
+                                const selectedFile = event.target.files[0];
+                                const bannerId = icon.closest('.banner_img').getAttribute('data-banner-id'); // Get the banner ID
+
+                                console.log("bannerId", bannerId)
+                                if (selectedFile) {
+                                    const formData = new FormData();
+                                    formData.append('file', selectedFile); // Append the selected file
+
+                                    // Upload the image to the server using fetch
+                                    fetch('/upload-ads-image', {
+                                        method: 'POST',
+                                        body: formData,
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.url) {
+                                                const newImageUrl = data.url;
+
+                                                // Find the corresponding image to update
+                                                const imgElement = icon.closest('.image_wrapper').querySelector('img');
+
+                                                // Update the image source with the new image URL
+                                                imgElement.src = newImageUrl;
+
+                                                // Now update the database with the new image URL
+                                                fetch('/update-banner-image', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    body: JSON.stringify({
+                                                        bannerId: bannerId, // Pass the banner ID
+                                                        newImageUrl: newImageUrl, // Send the new image URL
+                                                    })
+                                                })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        console.log(data.message); // Success message
+                                                    })
+                                                    .catch(error => {
+                                                        console.error("Error updating the database:", error);
+                                                    });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error("Error uploading the image:", error);
+                                        });
+                                }
+                            });
+                        });
+                    });
+                });
+        });
+
+    </script>
+
+    <!-- 📢 Card Ads 📢 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/cardAds')
+                .then(response => response.json())
+                .then(data => {
+                    const cardAdsContainer = document.querySelector('.cardAds');
+                    data.forEach(card => {
+                        cardAdsContainer.innerHTML += `
+                <div class="cardImgContainer">
+                    <img class="cardImg" src="${card.image_url}" data-card-id="${card.id}">
+                    <span class="editCardAd"><i class="fa-regular fa-pen-to-square"></i></span>
+                </div>
+                `;
+                    });
+
+                    const editIcons = document.querySelectorAll('.editCardAd');
+                    const fileInput = document.getElementById('cardFileInput');
+                    let selectedImage = null; // Store the reference of the clicked image
+
+                    editIcons.forEach(icon => {
+                        icon.addEventListener('click', function () {
+                            // Store the reference of the clicked image
+                            selectedImage = icon.closest('.cardImgContainer').querySelector('.cardImg');
+
+                            // Open file input
+                            fileInput.click();
+                        });
+                    });
+
+                    fileInput.addEventListener('change', function (event) {
+                        if (!selectedImage) return; // Ensure an image was selected
+
+                        const selectedFile = event.target.files[0];
+                        const cardImgId = selectedImage.getAttribute('data-card-id');
+
+                        if (selectedFile) {
+                            const formData = new FormData();
+                            formData.append('file', selectedFile);
+
+                            fetch('/upload-ads-image', {
+                                method: 'POST',
+                                body: formData,
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.url) {
+                                        const newImageUrl = data.url;
+
+                                        // Update only the clicked image
+                                        selectedImage.src = newImageUrl;
+
+                                        return fetch('/update-card-image', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify({
+                                                bannerId: cardImgId,
+                                                newImageUrl: newImageUrl,
+                                            })
+                                        });
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(data.message); // Success message
+                                })
+                                .catch(error => {
+                                    console.error("Error uploading/updating the image:", error);
+                                });
+                        }
+                    });
+                })
+                .catch(error => console.error("Error fetching card ads:", error));
+        });
+
+    </script>
+
+
+    <!-- 📦📦📦📦📦 Adding and Editing products 📦📦📦📦📦 -->
+    <div class="addProductWindow" id="addProductWindow" style="display: none;">
+        <h1>Add New Product</h1>
+
+        <form action="" id="add_Product_Form">
+
+            <div class="left">
+                <div class="general-info">
+                    <h2>General Information</h2>
+
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" name="productName" id="productName">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description Product</label>
+                        <textarea name="productDescription" id="productDescription"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="pricing">
+                    <h2>Pricing And Stock</h2>
+                    <div class="pricing_inputs">
+                        <div class="form-group">
+                            <label>Base Pricing</label>
+                            <input type="text" name="basePricing" id="basePricing">
+                        </div>
+                        <div class="form-group">
+                            <label>Stock</label>
+                            <input type="number" name="Stock" id="Stock">
+                        </div>
+                        <div class="form-group">
+                            <label>Discount</label>
+                            <input type="number" name="discount" id="discount">
+                        </div>
+                        <div class="form-group">
+                            <label>Discount Type</label>
+                            <input type="text" name="discountType" id="discountType">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="right">
+                <div class="product-images">
+                    <h2>Upload image</h2>
+                    <div class="selected-images">
+                        <div class="add-box" onclick="document.getElementById('fileInput').click()">
+                            <span><i class="fa-solid fa-camera"></i></span>
+                        </div>
+                        <img id="previewImageMain"
+                            style="display: none; width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
+                        <input type="file" id="fileInput" style="display: none;" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="product-type">
+                    <div class="form-group">
+                        <label>Product Type</label>
+                        <select name="productType" class="productType" id="productTypeSelect">
+                            <option value="">Select a Product Type</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="addBtn">Add Product</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="editProductWindow" id="editProductWindow" style="display: none;">
+        <h1>Edit Product</h1>
+
+        <form action="" id="edit_Product_Form">
+            <div class="left">
+                <div class="general-info">
+                    <h2>General Information</h2>
+
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" name="productName" id="editProductName">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description Product</label>
+                        <textarea name="productDescription" id="editProductDescription"></textarea>
+                    </div>
+                </div>
+
+                <div class="pricing">
+                    <h2>Pricing And Stock</h2>
+                    <div class="pricing_inputs">
+                        <div class="form-group">
+                            <label>Base Pricing</label>
+                            <input type="text" name="basePricing" id="editBasePricing">
+                        </div>
+                        <div class="form-group">
+                            <label>Stock</label>
+                            <input type="number" name="Stock" id="editStock">
+                        </div>
+                        <div class="form-group">
+                            <label>Discount</label>
+                            <input type="text" name="discount" id="editDiscount">
+                        </div>
+                        <div class="form-group">
+                            <label>Discount Type</label>
+                            <input type="text" name="discountType" id="editDiscountType">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div class="product-images">
+                    <h2>Upload Image</h2>
+                    <div class="selected-images-edit">
+                        <div class="image-container">
+                            <img src="" class="big-img" alt="Selected Image">
+                            <div class="small-img">
+                                <h1></h1>
+                                <div class="add-boxV2">
+                                    <span>+</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-type">
+                    <div class="form-group">
+                        <label>Product Type</label>
+                        <select name="productType" class="productType" id="editProductTypeSelect">
+                            <option value="0">Select a Product Type</option>
+                            <!-- Dynamic options will go here -->
+                        </select>
+                    </div>
+
+                    <button type="submit" class="editBtn">Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 📦 Get Produt Types 📦 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/productTypes')  // Call the backend API to get product types
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('productTypeSelect');
+                    data.forEach(productType => {
+                        const option = document.createElement('option');
+                        option.value = productType.id;  // Use the id of product type
+                        option.textContent = productType.name;
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error fetching product types:", error));
+        });
+    </script>
+
+
+    <!-- 🧑‍🤝‍🧑 🧑‍🤝‍🧑 Cutsomers 🧑‍🤝‍🧑 🧑‍🤝‍🧑-->
+    <!-- <script>
+        // Fetch data from the /customers endpoint
+        async function fetchCustomers() {
+            try {
+                const response = await fetch("/customers");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch customer data");
+                }
+                const data = await response.json();
+                populateTable(data);
+            } catch (error) {
+                console.error("Error fetching customer data:", error);
+            }
+        }
+
+        // Populate the table with customer data
+        function populateTable(customers) {
+            const tableBody = document.getElementById("customerTableBody");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            customers.forEach(customer => {
+                const row = document.createElement("tr");
+                row.classList.add("table_row");
+
+                row.innerHTML = `
+                    <td>${customer.Name}</td>
+                    <td>${customer.Email}</td>
+                    <td>${customer.Phone}</td>
+                    <td>${customer.Customer_Tier}</td>
+                    <td>${customer.Total_Purchase_Amount}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Fetch and populate data when the page loads
+        document.addEventListener("DOMContentLoaded", fetchCustomers);
+
+        function getLatestOrders() {
+            const orderTableBody = document.getElementById('orderTableBody');
+
+            fetch("/getLatestOrders")
+                .then(response => response.json())
+                .then(orders => {
+                    orderTableBody.innerHTML = ""; // Clear previous content
+
+                    orders.forEach(order => {
+                        // Convert status to lowercase and replace spaces with hyphens for class name
+                        const statusClass = `status-${order.status.toLowerCase().replace(/\s+/g, '-')}-tr`;
+
+                        orderTableBody.innerHTML += `
+                    <tr class="table_row">
+                        <td>${order.user_name}</td>
+                        <td>${order.user_email}</td>
+                        <td>${order.user_phone}</td>
+                        <td class="status-cell ${statusClass}">${order.status}</td>
+                        <td>za45id</td>
+                    </tr>
+                `;
+                    });
+                })
+                .catch(error => console.error("Error fetching orders:", error));
+        }
+        document.addEventListener("DOMContentLoaded", getLatestOrders);
+
+    </script> -->
+
+
+    <!-- 💻🖥️💻🖥️💻 Show Sections 🖥️💻🖥️💻🖥️ -->
+    <script>
+        // Cache DOM elements
+        const menuItems = document.querySelectorAll('.menu_item');
+        const dashboardContent = document.getElementById('stats');
+        const productsContent = document.getElementById('products-section');
+        const ordersContent = document.getElementById('orders-section');
+        const customersContent = document.getElementById('customers-section');
+        const adsSectionWindow = document.getElementById('ads-section');
+        const addProductBtn = document.querySelector('.add_product');
+        const searchInputItem = document.getElementById('searchInput');
+        const addProductWindow = document.getElementById('addProductWindow');
+        const editProductWindow = document.getElementById('editProductWindow');
+
+        // Function to handle menu item click
+        function handleMenuClick(e) {
+            // Remove active class from all menu items and add to clicked one
+            menuItems.forEach(item => item.classList.remove('active'));
+            e.target.closest('.menu_item').classList.add('active');
+
+            // Hide all content sections by default
+            dashboardContent.style.display = 'none';
+            productsContent.style.display = 'none';
+            ordersContent.style.display = 'none';
+            customersContent.style.display = 'none';
+            addProductWindow.style.display = 'none';
+            editProductWindow.style.display = 'none';
+            adsSectionWindow.style.display = 'none';
+
+            // Show content based on selected menu item
+            if (e.target.closest('#dashboardMenu')) {
+                dashboardContent.style.display = 'block';
+                searchInputItem.placeholder = "Search for Products";
+            } else if (e.target.closest('#productsMenu')) {
+                productsContent.style.display = 'block';
+                searchInputItem.placeholder = "Search for Products";
+            } else if (e.target.closest('#orders')) {
+                ordersContent.style.display = 'block';
+                searchInputItem.placeholder = "Search for Orders";
+            } else if (e.target.closest('#customersMenu')) {
+                customersContent.style.display = 'block';
+                searchInputItem.placeholder = "Search for Orders";
+            } else if (e.target.closest('#adsMenu')) {
+                adsSectionWindow.style.display = 'block';
+                editMainAdsWindow.style.display = 'none'; // Show the edit window
+            }
+        }
+
+        // Add event listeners to all menu items
+        menuItems.forEach(item => item.addEventListener('click', handleMenuClick));
+
+        // Set the default selected menu item and content on page load
+        document.addEventListener("DOMContentLoaded", function () {
+            const defaultMenuItem = document.querySelector('#dashboardMenu');
+            if (defaultMenuItem) {
+                defaultMenuItem.click(); // Simulate a click on the default menu item
+            }
+        });
+
+        // Show add product window when the button is clicked
+        addProductBtn.addEventListener('click', function () {
+            productsContent.style.display = 'none';
+            addProductWindow.style.display = 'block';
+        });
+
+
+        const editMainAdsBtns = document.querySelectorAll('.edit_main_ads');
+        const editMainAdsWindow = document.getElementById('edit_main_ads_window');
+
+        editMainAdsBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                adsSectionWindow.style.display = 'none'; // Hide the ads section
+                editMainAdsWindow.style.display = 'block'; // Show the edit window
+            });
+        });
+
+    </script>
+
+
+
+    <!-- Modals -->
+
+    <!-- Loading Animation (Initially Hidden) -->
+
+
+
+    <!-- Overlay for the entire page -->
+    <div class="overlay" id="overlay"></div>
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <div id="loadingAnimation" class="loading-overlay" style="display: none;">
+        <!-- Use local JSON file -->
+        <lottie-player src="animations/loading.json" background="transparent" speed="1"
+            style="width: 150px; height: 150px;" loop autoplay>
+        </lottie-player>
+        <p>Processing, please wait...</p>
+    </div>
+
+
+
+
+
+    <!-- Success Modal -->
+    <div id="successModal" class="successModal" style="display: none;">
+        <div class="successModal-content">
+            <span class="close">&times;</span>
+            <span class="check"><i class="fa-solid fa-circle-check"></i></span>
+            <h2>Success!</h2>
+            <p class="modal_msg"></p>
+        </div>
+    </div>
+
+    <script type="module" src="js/dashbaordv2.js"></script>
+
+    <script src="../js/login.js"></script>
+
+</body>
+
+<script>
+    fetch('/dashboard') // Try to access the protected route
+        .then(response => {
+            if (!response.ok) {
+                window.location.href = '/login.html'; // If unauthorized, send back to login
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.location.href = '/login.html'; // Redirect if any error occurs
+        });
+</script>
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    // let selectedImagesArray = []; // Array to store File objects
+
+    // // Function to handle file selection
+    // function handleFileSelect(event) {
+    //     const file = event.target.files[0]; // Get the selected file
+    //     if (file) {
+    //         selectedImagesArray.push(file); // Store the File object
+    //         updateImagePreview(); // Update the preview
+    //     }
+    // }
+
+    // // Function to update the image preview
+    // function updateImagePreview() {
+    //     const selectedImages = document.querySelector('.selected-images');
+    //     if (selectedImagesArray.length > 0) {
+    //         const bigImageUrl = URL.createObjectURL(selectedImagesArray[0]); // Use the first image as the big preview
+    //         const smallImagesHtml = selectedImagesArray.slice(1).map((file, index) => `
+    //                             <img src="${URL.createObjectURL(file)}" alt="Preview ${index + 1}">
+    //                         `).join('');
+
+    //         selectedImages.innerHTML = `
+    //                             <div class="image-container">
+    //                                 <img src="${bigImageUrl}" class="big-img" alt="Selected Image">
+    //                                 <div class="small-img">
+    //                                     ${smallImagesHtml}
+    //                                     <div class="add-boxV2" onclick="document.getElementById('additionalFileInput').click()">
+    //                                         <span>+</span>
+    //                                     </div>
+    //                                 </div>
+    //                             </div>
+    //                         `;
+    //     }
+    // }
+
+    // // Function to trigger additional file input
+    // function addAdditionalImage() {
+    //     document.getElementById('additionalFileInput').click();
+    // }
+
+    // // Create additional file input dynamically
+    // const additionalFileInput = document.createElement('input');
+    // additionalFileInput.type = 'file';
+    // additionalFileInput.id = 'additionalFileInput';
+    // additionalFileInput.style.display = 'none';
+    // additionalFileInput.accept = 'image/*';
+    // additionalFileInput.addEventListener('change', handleFileSelect);
+    // document.body.appendChild(additionalFileInput);
+
+    // // Attach event listener to the main file input
+    // document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+    // // Handle form submission
+    // document.getElementById('add_Product_Form').addEventListener('submit', async function (event) {
+    //     event.preventDefault();
+
+    //     // Prepare form data
+    //     const formData = {
+    //         name: document.getElementById("productName").value,
+    //         price: parseFloat(document.getElementById("basePricing").value),
+    //         description: document.getElementById("productDescription").value,
+    //         quantity: parseInt(document.getElementById("Stock").value),
+    //         discount: parseFloat(document.getElementById("discount").value) || 0,
+    //         type_id: parseInt(document.getElementById("productTypeSelect").value),
+    //         images: [] // Will be populated with image URLs
+    //     };
+
+    //     // Upload images and get their URLs
+    //     if (selectedImagesArray.length > 0) {
+    //         try {
+    //             const uploadedURLs = await uploadFiles(selectedImagesArray);
+    //             formData.images.push(...uploadedURLs);
+    //             await sendFormData(formData); // Send the form data to the server
+    //             alert("Product added successfully!");
+
+    //             closeModal(); // Close the modal
+    //         } catch (error) {
+    //             console.error("Error:", error);
+    //             alert("Error adding product. Please try again.");
+    //         }
+    //     } else {
+    //         console.log("No images selected.");
+    //         alert("Please select at least one image.");
+    //     }
+    // });
+
+    // // Function to upload files and return their URLs
+    // async function uploadFiles(files) {
+    //     const uploadedURLs = [];
+    //     for (const file of files) {
+    //         const formData = new FormData();
+    //         formData.append("file", file);
+
+    //         const response = await fetch("/upload-image", {
+    //             method: "POST",
+    //             body: formData
+    //         });
+
+    //         const data = await response.json();
+    //         if (data.url) {
+    //             uploadedURLs.push(data.url);
+    //         }
+    //     }
+    //     return uploadedURLs;
+    // }
+
+    // // Function to send form data to the server
+    // async function sendFormData(formData) {
+    //     const response = await fetch("/add-product2", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify(formData)
+    //     });
+
+    //     const data = await response.json();
+    //     console.log("Success:", data);
+    // }
+
+    // // Function to close the modal
+    // function closeModal() {
+    //     const modal = document.getElementById("addProductWindow"); // Replace "addProductWindow" with your modal's ID
+    //     if (modal) {
+    //         modal.style.display = "none";
+    //     }
+    // }
+</script>
+
+
+
+
+
+<!-- <script>
+        // Get the modal element
+        const modal = document.getElementById('addProductModal');
+
+        // Get the button that opens the modal
+        const addProductBtn = document.querySelector('.add_product');
+
+        // Get the <span> element that closes the modal
+        const closeBtn = document.querySelector('.close');
+
+        // When the user clicks on the "Add Product" button, open the modal
+        addProductBtn.addEventListener('click', function () {
+            modal.style.display = 'flex'; // Show the modal
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        closeBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.addEventListener('click', function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+
+
+    </script> -->
+
+
+
+<!-- <script>
+        function toggleDropdown() {
+            const dropdownList = document.getElementById("dropdownList");
+            dropdownList.style.display = dropdownList.style.display === "block" ? "none" : "block";
+        }
+
+        // Close dropdown if clicked outside
+        document.addEventListener("click", function (event) {
+            const dropdownList = document.getElementById("dropdownList");
+            if (!event.target.closest('.dropdown')) {
+                dropdownList.style.display = "none";
+            }
+        });
+
+        // Function to select a product type
+        function selectType(type) {
+            document.getElementById("productType").value = type;
+            document.getElementById("dropdownList").style.display = "none"; // Hide dropdown after selection
+        }
+
+    </script> -->

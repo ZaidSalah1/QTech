@@ -1,0 +1,237 @@
+/* All product Window */
+.top_page {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.top_page h1 {
+    color: var(--main-color);
+    margin-bottom: 25px;
+}
+
+.top_page p {
+    font-size: 18px;
+    width: 60%;
+    margin: auto;
+    font-weight: 400;
+}
+
+.all_products .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.all_products .filter {
+    background: #fff;
+    width: 280px;
+    /* height: 1000px; */
+    text-transform: capitalize;
+    padding: 20px 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.all_products .filter input:checked {
+    accent-color: var(--main-color);
+}
+
+.all_products .filter h4 {
+    margin-bottom: 10px;
+    margin-top: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.all_products .filter span {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.all_products .filter .filter_item .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.all_products .filter .filter_item .item .color {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+}
+
+
+
+.all_products .products_dev {
+    width: calc(100% - 300px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5%;
+}
+
+.all_products .products_dev .product {
+    width: 22%;
+    margin-bottom: 30px;
+}
+
+
+.pagination {
+    padding: 8px 20px;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: max-content;
+    margin: auto;
+}
+
+.pagination .btn_page {
+    font-size: 22px;
+    padding: 0 15px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.pagination .btn_page:hover {
+    color: var(--main-color);
+}
+
+.pagination .num_page {
+    border: 1px solid transparent;
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 18px;
+}
+
+.pagination .num_page.active,
+.pagination .num_page:hover {
+    border: 1px solid var(--main-color);
+    cursor: pointer;
+}
+
+.all_products .btn_filter {
+    display: none;
+}
+
+        
+#loadMoreBtn {
+    background-color: var(--main-color);  /* Modern green background */
+    border: none;  /* Remove border for a cleaner look */
+    padding: 12px 30px;  /* Adjust padding for a bigger, clickable button */
+    color: #fff;  /* White text color */
+    font-size: 16px;  /* Larger font size */
+    font-weight: bold;  /* Make the text bold */
+    border-radius: 30px;  /* Rounded corners for a modern look */
+    cursor: pointer;  /* Change cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease;  /* Add smooth hover effect */
+    display: flex;  /* Use flexbox to align icon and text */
+    justify-content: center;  /* Center contents horizontally */
+    align-items: center;  /* Center contents vertically */
+    margin: 15px auto;
+
+}
+
+#loadMoreBtn i {
+    margin-right: 10px;  /* Space between the icon and the text */
+}
+
+#loadMoreBtn:hover {
+    background-color: #e7ab04;  /* Darken background on hover */
+    transform: scale(1.05);  /* Slightly increase size on hover */
+}
+
+/* All product Window end */
+
+
+/* All product Responsiv */
+
+@media (max-width: 1300px) {
+    .all_products .products_dev .product {
+        width: 30%;
+    }
+
+}
+
+@media (max-width: 1200px) {
+    .all_products .products_dev .product {
+        width: 48%;
+    }
+
+}
+
+@media (max-width: 1000px) {
+
+    .all_products .container {
+        position: relative;
+        padding-top: 60px;
+    }
+
+    /* .all_products .filter {
+        position: absolute;
+        top: 60px;
+        left: 540;
+        width: 40%;
+        z-index: 100;
+        opacity: 0;
+        z-index: -100;
+        transition: 0.3s opacity ease-in-out;
+    }
+
+    .all_products .filter.active {
+        z-index: 100;
+        opacity: 1;
+    } */    
+
+    .all_products .filter {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 250px;
+        height: 100%;
+        background: #f4f4f4;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        transition: left 0.3s ease-in-out;
+        padding: 15px;
+        z-index: 5000;
+        overflow-y: scroll;
+    }
+
+    .all_products .filter.filter-active {
+        left: 0;
+    }    
+
+    .all_products .products_dev {
+        width: 100%;
+    }
+
+    .all_products .products_dev .product {
+        width: 31%;
+    }
+
+    .all_products .btn_filter {
+        display: block;
+        position: absolute;
+        top: 0px;
+        padding: 12px 30px;
+        background: var(--main-color);
+        border-radius: 5px;
+        font-size: 18px;
+        text-transform: capitalize;
+
+    }
+
+}
+
+@media (max-width: 850px) {
+    .all_products .products_dev .product {
+        width: 48%;
+    }
+
+    
+}
+
+@media(max-width: 550px) {}
+
+/* All product Responsiv End*/

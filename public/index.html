@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QTech</title>
+    <link rel="icon" type="image/png" href="img/store icon.png">
+
+    <!--File Css-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!--Font Awesom-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- <img class="WhatsApp_icon" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt=""> -->
+
+    <a href="https://wa.me/+972585511872" target="_blank" class="WhatsApp_icon">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp">
+    </a>
+    
+    
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+
+</head>
+
+<body>
+
+
+    <div id="splash-screen">
+        <img src="img/logov2.png" alt="Splash Image">
+    </div>
+
+
+    <script src="js/cookie.js" defer></script>
+
+    <div id="desktopHeader"></div>
+    <div id="mobileHeader"></div>
+
+
+    <div class="cart">
+        <div class="top_cart">
+            <h3>My Cart <span class="top_items_count">(0 Item in Cart)</span></h3>
+            <span onclick="close_cart()" class="close_cart"><i class="fa-regular fa-circle-xmark"></i></span>
+        </div>
+
+        <div class="items_in_cart">
+
+        </div>
+
+        <div class="bottom_cart">
+            <div class="total">
+                <p>Cart Subtotal</p>
+                <p class="price_cart_total">$0</p>
+            </div>
+            <div class="button_cart">
+                <a href="checkout.html" class="btn_cart">Proceed to checkout</a>
+                <button class="btn_cart trans-bg">Shop More</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <section class="slider">
+        <div class="container">
+            <div class="side_bar">
+                <h2><i class="fa-solid fa-bars"></i>Shop By</h2>
+                <a href="all_product.html">All Categories</a>
+                <a href="all_product.html">Best Seller Product</a>
+                <a href="all_product.html">New Arrivals</a>
+                <a href="all_product.html">Gaming PCs</a>
+                <a href="#">Phones & Tablet</a>
+                <a href="all_product.html">Laptops & Notebooks</a>
+                <a href="all_product.html">Content Creation</a>
+                <a href="all_product.html">Custom Builds</a>
+                <a href="all_product.html">Accessories</a>
+            </div>
+            <!-- Swiper -->
+            <div class="slide-swp mySwiper">
+                <div class="swiper-wrapper">
+                    <!-- Dynamic Swiper slides will be inserted here -->
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/ads')  // Fetch ads from DB
+                .then(response => response.json())
+                .then(data => {
+                    const swiperContainer = document.querySelector('.swiper-wrapper');
+                    swiperContainer.innerHTML = ''; // Clear existing slides if any
+                    data.forEach(ad => {
+                        // Add image to Swiper and Display Area
+                        swiperContainer.innerHTML += `
+                    <div class="swiper-slide ads-swiper-slide">
+                        <a href="${ad.url_link || '#'}" target="_blank">
+                            <img src="${ad.image_url}" alt="Ad Image">
+                        </a>
+                    </div>
+                    `;
+                    });
+
+                    // Reinitialize Swiper after the slides have been added
+                    var swiper = new Swiper(".slide-swp", {
+                        effect: 'coverflow',
+                        grabCursor: true,
+                        centeredSlides: true,
+                        slidesPerView: 'auto',
+                        coverflowEffect: {
+                            rotate: 0,
+                            stretch: 0,
+                            depth: 100,
+                            modifier: 1, // Adjust this value to control the size difference
+                            slideShadows: false,
+                        },
+                        pagination: {
+                            el: ".swiper-pagination",
+                            dynamicBullests: true,
+                            clickable: true
+                        },
+                        autoplay: {
+                            delay: 2500,
+                        }, loop: true
+                    });
+                })
+                .catch(error => console.error("Error fetching ads:", error));
+        });
+    </script> -->
+
+
+    <section class="features">
+        <div class="container">
+
+            <div class="feature_item">
+                <img src="img/features1.png" alt="">
+                <div class="text">
+                    <h4>Free Shipping</h4>
+                    <p>Free Shipping on all order</p>
+                </div>
+            </div>
+
+            <div class="feature_item">
+                <img src="img/features2.png" alt="">
+                <div class="text">
+                    <h4>Money Guarantee</h4>
+                    <p>30 Day Money Back Guarantee</p>
+                </div>
+            </div>
+
+            <div class="feature_item">
+                <img src="img/features3.png" alt="">
+                <div class="text">
+                    <h4>Online Support 24/7</h4>
+                    <p>Technical Support Stand By</p>
+                </div>
+            </div>
+
+            <div class="feature_item">
+                <img src="img/cash-on-delivery.png" style="width: 60px !important;" alt="Cash on Delivery Icon">
+                <div class="text">
+                    <h4>Cash on Delivery</h4>
+                    <p>Pay when you receive your order</p>
+                </div>
+            </div>
+
+            <div class="feature_item">
+                <img src="img/features5.png" alt="">
+                <div class="text">
+                    <h4>Member Discount</h4>
+                    <p>Upto 40% Discount All Product</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <div class="selections">
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+
+        <div class="container swiper-wrapper">
+            <div class="type swiper-slide" data-type-id="12" onclick="navigateToProductType(12)">
+                <img src="img/case.png" alt="">
+                <h1>Computer Cases</h1>
+                <p class="product-count">Product Counts 92</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="15" onclick="navigateToProductType(15)">
+                <img src="img/labptops.png" alt="">
+                <h1>Laptops</h1>
+                <p class="product-count">Product Counts 27</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="2" onclick="navigateToProductType(2)">
+                <img src="img/gpus2.png" alt="">
+                <h1>Graphics Card</h1>
+                <p class="product-count">Product Counts 46</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="7" onclick="navigateToProductType(7)">
+                <img src="img/coolers.png" alt="">
+                <h1>Collers</h1>
+                <p class="product-count">Product Counts 46</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="1" onclick="navigateToProductType(1)">
+                <img src="img/cpus.png" alt="">
+                <h1>CPU's / Processors</h1>
+                <p class="product-count">Product Counts 58</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="4" onclick="navigateToProductType(4)">
+                <img src="img/ram.png" alt="">
+                <h1>Random Access Memory (RAM)</h1>
+                <p class="product-count">Product Counts 78</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="3" onclick="navigateToProductType(3)">
+                <img src="img/motherboards.png" alt="">
+                <h1>Motherboards</h1>
+                <p class="product-count">Product Counts 28</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="9" onclick="navigateToProductType(9)">
+                <img src="img/keyboardType.png" alt="">
+                <h1>Storage</h1>
+                <p class="product-count">Product Counts 36</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="5" onclick="navigateToProductType(5)">
+                <img src="img/storages.png" alt="">
+                <h1>Storage</h1>
+                <p class="product-count">Product Counts 36</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="8" onclick="navigateToProductType(8)">
+                <img src="img/monitors.png" alt="">
+                <h1>Monitors</h1>
+                <p class="product-count">Product Counts 46</p>
+            </div>
+
+            <div class="type swiper-slide" data-type-id="16" onclick="navigateToProductType(16)">
+                <img src="img/tablesType.png" alt="">
+                <h1>Tables</h1>
+                <p class="product-count">Product Counts 23</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchProductCounts() {
+            try {
+                const response = await fetch('/getProductsTypeCount');
+                const data = await response.json();
+
+                // Update the product counts for each type
+                data.forEach(item => {
+                    const productTypeElement = document.querySelector(`[data-type-id="${item.type_id}"]`);
+                    if (productTypeElement) {
+                        const countElement = productTypeElement.querySelector('.product-count');
+                        countElement.innerText = `Product Counts ${item.product_count}`;
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching product counts:', error);
+            }
+        }
+
+        // Fetch and display product counts when the page loads
+        fetchProductCounts();
+    </script>
+
+    <script>
+        var swiper = new Swiper(".selections", {
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            slidesPerView: 3, // Adjust as needed
+            spaceBetween: 30, // Space between slides
+            breakpoints: {
+                1600: {
+                    slidesPerView: 3,
+                }, 1300: {
+                    slidesPerView: 3,
+                    spaceBetween: 20
+                },
+
+                1200: {
+                    slidesPerView: 4,
+                    spaceBetween: 20
+                },
+                1000: {
+                    slidesPerView: 3,
+                    spaceBetween: 15
+                }, 800: {
+                    slidesPerView: 3,
+                    spaceBetween: 10
+                }, 500: {
+                    slidesPerView: 2,
+                    spaceBetween: 10
+                }, 200: {
+                    slidesPerView: 2,
+                    spaceBetween: 10
+                },
+            }                         // Enables continuous looping of slides.
+
+        });
+    </script>
+
+
+    <section class="slide slide_sale">
+        <div class="container">
+            <div class="sale_sec mySwiper">
+                <div class="top_slide">
+                    <h2>New Arrivals <span>Product</span></h2>
+                </div>
+
+                <div id="swiper_items_sale" class="products swiper-wrapper">
+
+
+                </div>
+
+                <div class="swiper-button-next btn_swip"></div>
+
+                <div class="swiper-button-prev btn_swip"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    <section class="banner banner_big">
+        <div class="container">
+
+            <div class="banner_img">
+                <div class="glass_hover"> </div>
+                <a href="#"></a>
+                <img src="img/banner/banner-12.png" alt="">
+            </div>
+
+            <div class="banner_img">
+                <div class="glass_hover"> </div>
+                <a href="#"></a>
+                <img src="img/banner/banner-13.png" alt="">
+            </div>
+
+        </div>
+    </section> -->
+
+
+
+    <section class="slide slide_product" id="section1">
+        <div class="container">
+
+            <div class="top_slide">
+                <h2>Discounted <span>Products</span></h2>
+            </div>
+
+            <div class="slide_with_img">
+                <div class="categ_img">
+                    <!-- <a href="#"><img src="img/banner/zbanner2.png" alt=""></a> -->
+                </div>
+                <div class="product_swip mySwiper">
+                    <div class="products other_product_swiper swiper-wrapper" id="other_product_swiper">
+
+                    </div>
+
+                    <div class="swiper-button-next btn_swip"></div>
+
+                    <div class="swiper-button-prev btn_swip"></div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <section class="slide slide_product" id="section2">
+        <div class="container">
+
+            <div class="top_slide">
+                <h2>Special <span>Products</span></h2>
+            </div>
+
+            <div class="slide_with_img">
+
+                <div class="product_swip mySwiper">
+                    <div class="products other_product_swiper swiper-wrapper" id="other_product_swiper2">
+                    </div>
+
+                    <div class="swiper-button-next btn_swip"></div>
+
+                    <div class="swiper-button-prev btn_swip"></div>
+
+                </div>
+                <div class="categ_img">
+                    <!-- <a href="#"><img src="img/banner/blue_banner.png" alt=""></a> -->
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <div class="brands-section">
+        <div class="brands-header">
+            <h2>Top Brands We Offer</h2>
+            <p>We partner with leading brands to bring you the best quality and innovation.</p>
+        </div>
+        <div class="brands-container">
+            <div class="swiper brandsSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img class="brandImg" src="img/brands/aorus.png" alt="AORUS">
+                        <span class="brand-name">AORUS</span>
+                    </div>
+                    <div class="swiper-slide">
+                        <img class="brandImg" src="img/brands/hp.png" alt="HP">
+                        <span class="brand-name">HP</span>
+                    </div>
+                    <div class="swiper-slide">
+                        <img class="brandImg" src="img/brands/intel.png" alt="Intel">
+                        <span class="brand-name">Intel</span>
+                    </div>
+                    <div class="swiper-slide">
+                        <img class="brandImg" src="img/brands/msi.png" alt="MSI">
+                        <span class="brand-name">MSI</span>
+                    </div>
+                    <div class="swiper-slide">
+                        <img class="brandImg" src="img/brands/rog.png" alt="ROG">
+                        <span class="brand-name">ROG</span>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <img class="brandImg" src="img/brands/hyperx.png" alt="ROG">
+                        <span class="brand-name">HyperX</span>
+                    </div>
+
+                    
+                    <div class="swiper-slide">
+                        <img class="brandImg" src="img/brands/ryzen.png" alt="ROG">
+                        <span class="brand-name">Ryzen</span>
+                    </div>
+
+                </div>
+                <!-- Navigation Arrows -->
+                <div class="swiper-button-next brands-next"></div>
+                <div class="swiper-button-prev brands-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footerContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("components/footer.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("footerContainer").innerHTML = data;
+                })
+                .catch(error => console.error("Error loading footer:", error));
+        });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    </script>
+
+
+
+</body>
+
+
+<script>
+    function navigateToProductType(type) {
+        window.location.href = `product_type.html?type_id=${encodeURIComponent(type)}`;
+    }
+</script>
+
+
+
+
+<script>
+    // Add this script at the end of your HTML or in a separate JS file
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            const splashScreen = document.getElementById('splash-screen');
+            if (splashScreen) {
+                splashScreen.style.display = 'none';
+            }
+        }, 500); // 1000 milliseconds = 1 second
+    });
+
+</script>
+
+
+
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- <script src="js/items_home.js" type="module"></script> -->
+<!-- <script src="js/main.js"></script> -->
+
+<script src="js/products.js" defer></script>
+<script src="js/cookie.js" defer></script>
+<script src="js/index.js" defer></script>
+
+
+<script src="js/swiper.js"></script>
+<!-- <script src="js/login.js"></script> -->
+<!-- <script src="js/auth.js"></script> -->
+<script src="js/header.js"></script>
+<script src="js/components/menu.js"></script>
+<script src="js/ads.js"></script>
+</html>

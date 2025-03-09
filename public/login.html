@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QTech</title>
+    <link rel="icon" type="image/png" href="img/store icon.png">
+    <!--File Css-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/login_regs.css">
+    <!--Font Awesom-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+</head>
+
+<body>
+
+    <div id="splash-screen">
+        <img src="img/logov2.png" alt="Splash Image">
+    </div>
+
+    <div id="desktopHeader"></div>
+    <div id="mobileHeader"></div>
+
+
+    <script>
+        // Function to dynamically load the menu content
+        document.addEventListener("DOMContentLoaded", function () {
+            loadMenu();
+        });
+
+        function loadMenu() {
+            const menuContainer = document.getElementById('menuContainer');
+            fetch('menu.html')
+                .then(response => response.text())
+                .then(data => {
+                    menuContainer.innerHTML = data;
+                    // After the menu is loaded, initialize it
+                    initializeMenu(); // This will be loaded from the included menu.js
+                })
+                .catch(error => {
+                    console.error('Error loading the menu:', error);
+                });
+        }
+    </script>
+
+
+
+
+    <div class="cart">
+        <div class="top_cart">
+            <h3>My Cart <span class="top_items_count">(0 Item in Cart)</span></h3>
+            <span onclick="close_cart()" class="close_cart"><i class="fa-regular fa-circle-xmark"></i></span>
+        </div>
+
+        <div class="items_in_cart">
+
+        </div>
+
+        <div class="bottom_cart">
+            <div class="total">
+                <p>Cart Subtotal</p>
+                <p class="price_cart_total">$0</p>
+            </div>
+            <div class="button_cart">
+                <a href="checkout.html" class="btn_cart">Proceed to checkout</a>
+                <button class="btn_cart trans-bg">Shop More</button>
+            </div>
+        </div>
+    </div>
+
+
+    <section class="signin sec_form" id="signin">
+        <div class="form_container">
+            <p class="title">Welcome Back</p>
+
+            <form action="" class="form" id="login-form">
+                <!-- Error Message Container -->
+                <div id="error-message" class="error-message"></div>
+
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope icon-inside"></i>
+                    <input type="email" placeholder="Email" id="login_email" value="zaid231@gmail.com" required>
+                </div>
+
+                <div class="input-with-icon">
+                    <i class="fas fa-lock icon-inside"></i>
+                    <input type="password" placeholder="Password" id="login_password" value="123123" required>
+                </div>
+
+                <p class="page-link">
+                    <a href="#" class="page-link-label">Forgot Password?</a>
+                </p>
+
+                <button class="form-btn" type="submit" id="login-btn">Log In</button>
+            </form>
+
+            <p class="sign-up-label">
+                Don't have an account? <a href="" class="sign-up-link">Sign Up</a>
+            </p>
+        </div>
+    </section>
+
+    <section class="sign_up_sec" id="sign_up_sec" style="display: none;">
+        <div class="form_container">
+            <p class="title">Create Account</p>
+            <form action="" class="form" id="signup-form">
+                <!-- Error Message Container -->
+                <div id="signup-error-message" class="error-message"></div>
+
+                <div class="input-with-icon">
+                    <input type="text" placeholder="User Name" id="UserName" required>
+                    <i class="fas fa-user icon-inside"></i>
+                </div>
+
+                <div class="input-with-icon">
+                    <input type="text" placeholder="Phone Number" id="phone" required>
+                    <i class="fas fa-phone icon-inside"></i>
+                </div>
+
+                <div class="input-with-icon">
+                    <input type="email" placeholder="Email" id="email" required>
+                    <i class="fas fa-envelope icon-inside"></i>
+                </div>
+
+                <div class="input-with-icon">
+                    <input type="password" placeholder="Password" id="passwordd" required>
+                    <i class="fas fa-lock icon-inside"></i>
+                </div>
+
+                <div class="input-with-icon">
+                    <input type="password" placeholder="Confirm Password" id="surePasswordd" required>
+                    <i class="fas fa-lock icon-inside"></i>
+                </div>
+
+                <button class="form-btn" type="submit" id="signup-btn">Sign Up</button>
+            </form>
+            <p class="sign-in-label">
+                Already have an account? <a href="#" class="sign-in-link">Sign In</a>
+            </p>
+        </div>
+    </section>
+
+
+
+    <!-- <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+    <p id="message"></p> -->
+
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            const email = document.getElementById('login_email').value;
+            const password = document.getElementById('login_password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            // Clear previous error states
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+            document.getElementById('login_email').classList.remove('error');
+            document.getElementById('login_password').classList.remove('error');
+
+            // Send the login request to the backend
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Store authentication status in localStorage
+                        localStorage.setItem('isAuthenticated', 'true');
+
+                        // Update the header
+                        updateHeader(true, data.message);
+
+                        // Open dashboard in a new tab
+                        window.open("/dashboard", "_blank");
+
+                        // Redirect to index.html
+                        // window.location.href = "index.html";
+                    } else {
+                        // Display error message
+                        errorMessage.textContent = data.message;
+                        errorMessage.style.display = 'block';
+
+                        // Highlight problematic input fields
+                        if (data.field === 'email') {
+                            document.getElementById('login_email').classList.add('error');
+                        } else if (data.field === 'password') {
+                            document.getElementById('login_password').classList.add('error');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMessage.textContent = 'An error occurred. Please try again.';
+                    errorMessage.style.display = 'block';
+                });
+        });
+
+        // document.getElementById('logoutButton').addEventListener('click', function (e) {
+        //     e.preventDefault(); // Prevent the default link behavior
+
+        //     // Send a logout request to the backend
+        //     fetch('/logout', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 // Clear authentication status from localStorage
+        //                 localStorage.removeItem('isAuthenticated');
+
+        //                 // Update the header
+        //                 updateHeader(false, data.message);
+
+        //                 // Redirect to the homepage or login page
+        //                 window.location.href = "index.html";
+        //             } else {
+        //                 document.getElementById('message').textContent = data.message;
+        //                 document.getElementById('message').style.color = 'red';
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //             document.getElementById('message').textContent = 'An error occurred. Please try again.';
+        //             document.getElementById('message').style.color = 'red';
+        //         });
+        // });
+
+        // setInterval(() => {
+        //     fetch('/check-session')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (!data.isAuthenticated) {
+        //                 localStorage.removeItem('isAuthenticated');
+        //                 updateHeader(false);
+        //             }
+        //         });
+        // }, 60000); // Check every 60 seconds
+    </script>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            const username = document.getElementById('UserName').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('passwordd').value;
+            const confirmPassword = document.getElementById('surePasswordd').value;
+            const errorMessage = document.getElementById('signup-error-message');
+
+            // Clear previous error states
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+
+            // Validate password match
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Send the sign-up request to the backend
+            fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, phone, email, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to login page or display success message
+                        window.location.href = "login.html";
+                    } else {
+                        // Display error message
+                        errorMessage.textContent = data.message;
+                        errorMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMessage.textContent = 'An error occurred. Please try again.';
+                    errorMessage.style.display = 'block';
+                });
+        });
+
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get references to the links and sections
+            const signUpLink = document.querySelector('.sign-up-link');
+            const signInLink = document.querySelector('.sign-in-link');
+            const signInSection = document.getElementById('signin');
+            const signUpSection = document.getElementById('sign_up_sec');
+
+            // Add event listener to "Sign Up" link
+            if (signUpLink) {
+                signUpLink.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    signInSection.style.display = 'none'; // Hide Sign In section
+                    signUpSection.style.display = 'flex'; // Show Sign Up section
+                });
+            }
+
+            // Add event listener to "Sign In" link
+            if (signInLink) {
+                signInLink.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    signUpSection.style.display = 'none'; // Hide Sign Up section
+                    signInSection.style.display = 'flex'; // Show Sign In section
+                });
+            }
+        });
+    </script>
+
+    <!-- <button id="logoutBtn" style="display:none;">Logout</button> -->
+
+    <script>
+        // Check if the user is logged in (this part depends on your session handling)
+        // For simplicity, let's assume we only show the "Logout" button if the user is authenticated.
+
+        // Function to handle logout
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            fetch('/logout', {
+                method: 'GET',
+            })
+                .then(() => {
+                    // Redirect to login page after logout
+                    window.location.href = '/login.html';
+                })
+                .catch(error => {
+                    console.error('Logout Error:', error);
+                });
+        });
+
+        // Simulating a logged-in state (you can adjust this based on your actual session handling)
+        // If the user is logged in, show the logout button
+        // In a real app, you might check for a session variable or JWT token to determine if the user is logged in.
+        document.getElementById('logoutBtn').style.display = 'inline-block'; // Show the button
+    </script>
+
+    <!-- Place this where you want to load the footer -->
+
+    <div id="footerContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("components/footer.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("footerContainer").innerHTML = data;
+                })
+                .catch(error => console.error("Error loading footer:", error));
+        });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    </script>
+
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const items = JSON.parse(localStorage.getItem("cartItems")) || [];
+            const itemsContainer = document.querySelector(".items");
+            let totalPrice = 0;
+
+            // Loop through each item and add its price to the total price
+            items.forEach(item => {
+                // Calculate the total price for the current item (price * quantity)
+                const itemTotalPrice = item.price * item.quantity;
+
+                // Add the item's total price to the overall total price
+                totalPrice += itemTotalPrice;
+
+                // Display each item in the order summary
+                itemsContainer.innerHTML += `
+            <div class="items_cart">
+                <img src="${item.img}" alt="">
+                <div class="content">
+                    <h4>${item.name}</h4>
+                    <p class="price_cart">Price: <span class ="item_price">₪${item.price}</span></p>
+                    <p class="quantity_cart">Quantity: <span class = "quantity_item">${item.quantity}</span></p>
+                </div>
+
+                <button onclick="remove_from_cart(${item.id})" class="delete_item">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        `;
+            });
+
+            // Update the total price in the checkout section
+            const total_price_checkout = document.getElementById("total_price_checkout");
+            total_price_checkout.innerHTML = "₪" + totalPrice;
+        });
+
+    </script>
+
+    <script>
+        window.onload = function () {
+            // Retrieve cart items from local storage
+            const storedCart = localStorage.getItem('cartItems');
+
+            if (storedCart) {
+                product_cart = JSON.parse(storedCart);
+                getCartItems(); // Refresh cart display
+            }
+        };
+
+    </script>
+
+    <script>
+        // Add this script at the end of your HTML or in a separate JS file
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                const splashScreen = document.getElementById('splash-screen');
+                if (splashScreen) {
+                    splashScreen.style.display = 'none';
+                }
+            }, 300); // 1000 milliseconds = 1 second
+        });
+
+    </script>
+
+    <script src="js/cookie.js"></script>
+    <script src="js/products.js" defer></script>
+    <script src="js/header.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components/menu.js"></script>
+    <!-- <script src="js/login.js"></script> -->
+    <!-- <script src="/app.js"></script> -->
+</body>
+
+</html>

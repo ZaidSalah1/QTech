@@ -1,0 +1,166 @@
+<body>
+    <header>
+        <div class="container top-nav">
+            <a href="index.html" class="logo"><img src="img/logov2.png" alt="Logo"></a>
+            <div class="searchContainer">
+                <form id="searchForm" action="search_results.html" class="search">
+                    <input type="search" id="searchInput" placeholder="Search for product">
+                    <button type="submit">Search</button>
+                </form>
+                <div class="searchDropdown"></div>
+            </div>
+            <div class="cookieItem">
+                <div class="cart_header">
+                    <div class="icon_language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span class="language">AR</span>
+                    </div>
+                </div>
+                <div class="cart_header">
+                    <div class="icon_fav" onclick="openFavPage()">
+                        <i class="fa-solid fa-heart"></i>
+                        <span class="count_fav">0</span>
+                    </div>
+                </div>
+                <div class="cart_header">
+                    <div onclick="open_cart()" class="icon_cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="count_item"></span>
+                    </div>
+                </div>
+                <div class="total_price">
+                    <p>My Cart:</p>
+                    <p class="price_cart_head">₪0</p>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="links container">
+                <i onclick="open_menu()" class="fa-solid fa-bars btn_open_menu"></i>
+                <ul id="menu">
+                    <span onclick="close_menu()" class="bg_overlay"></span>
+                    <i onclick="close_menu()" class="fa-regular fa-circle-xmark btn_close_menu"></i>
+                    <img class="logo_menu" src="img/logo-black.png" alt="">
+                    <li class="active"><a href="index.html">home</a></li>
+                    <li><a href="all_product.html">all product</a></li>
+                    <li><a href="">about us</a></li>
+                    <li><a href="">contact</a></li>
+                </ul>
+                <div id="loginSignupSection" class="loging_signup">
+                    <a href="login.html">login <i class="fa-solid fa-right-to-bracket"></i></a>
+                    <a href="#">sign up <i class="fa-solid fa-user-plus"></i></a>
+                </div>
+                <div id="logoutSection" class="loging_signup" style="display: none;">
+                    <a href="#" id="">My Orders <i class="fa-solid fa-box-archive"></i></a>
+                    <a href="#" id="logoutButton">logout <i class="fa-solid fa-right-from-bracket"></i></a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Language Modal -->
+    <div id="languageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn"><i class="fa-regular fa-circle-xmark"></i></span>
+            <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
+            <p>عذرًا، اللغة العربية غير متاحة حاليًا.</p>
+            <button class="btn-close">حسنًا</button>
+        </div>
+    </div>
+
+
+
+    <style>
+        /* Modern Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 5000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            width: 450px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Modal Icon */
+        .modal-icon {
+            font-size: 50px;
+            color: #ff4c4c;
+            margin-bottom: 15px;
+        }
+
+        /* Modal Text */
+        .modal-content p {
+            margin: 0 0 15px;
+            color: #ffffff;
+            font-size: 20px;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #ff4c4c;
+        }
+
+        /* Animated Button */
+        .btn-close {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #ff4c4c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-close:hover {
+            background: #d84343;
+        }
+    </style>
+
+
+</body>
