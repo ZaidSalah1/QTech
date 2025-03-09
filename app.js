@@ -14,14 +14,15 @@ const BASE_URL = process.env.BASE_URL || ""; // Define a base URL from env varia
 app.use(express.json());
 
 const connection = mysql.createPool({
-    host: process.env.DB_HOST,  // Set by Render
-    user: process.env.DB_USER,  // Set by Render
-    password: process.env.DB_PASSWORD,  // Set by Render
-    database: process.env.DB_NAME,  // Set by Render
+    host: process.env.DB_HOST,  // sql109.infinityfree.com
+    user: process.env.DB_USER,  // if0_38335742
+    password: process.env.DB_PASSWORD,  // (Your vPanel Password)
+    database: process.env.DB_NAME,  // if0_38335742_QTech
     waitForConnections: true,
-    connectionLimit: 10,  // Maximum number of connections in the pool
-    queueLimit: 0  // Unlimited queue size
+    connectionLimit: 10,
+    queueLimit: 0
 });
+
 
 
 connection.getConnection((err, conn) => {
