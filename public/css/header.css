@@ -512,10 +512,7 @@ header .links ul .logo_menu {
         margin: 0 auto;
     }
 
-    .product .img_product .img_hover,
-    .product .img_product img {
-        height: 175px;
-    }
+
 
     .product .stars span,
     .product .stars i{

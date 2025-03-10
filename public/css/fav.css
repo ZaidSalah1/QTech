@@ -114,31 +114,46 @@
     display: none;
 }
 
-        
+
 #loadMoreBtn {
-    background-color: var(--main-color);  /* Modern green background */
-    border: none;  /* Remove border for a cleaner look */
-    padding: 12px 30px;  /* Adjust padding for a bigger, clickable button */
-    color: #fff;  /* White text color */
-    font-size: 16px;  /* Larger font size */
-    font-weight: bold;  /* Make the text bold */
-    border-radius: 30px;  /* Rounded corners for a modern look */
-    cursor: pointer;  /* Change cursor on hover */
-    transition: background-color 0.3s ease, transform 0.3s ease;  /* Add smooth hover effect */
-    display: flex;  /* Use flexbox to align icon and text */
-    justify-content: center;  /* Center contents horizontally */
-    align-items: center;  /* Center contents vertically */
+    background-color: var(--main-color);
+    /* Modern green background */
+    border: none;
+    /* Remove border for a cleaner look */
+    padding: 12px 30px;
+    /* Adjust padding for a bigger, clickable button */
+    color: #fff;
+    /* White text color */
+    font-size: 16px;
+    /* Larger font size */
+    font-weight: bold;
+    /* Make the text bold */
+    border-radius: 30px;
+    /* Rounded corners for a modern look */
+    cursor: pointer;
+    /* Change cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    /* Add smooth hover effect */
+    display: flex;
+    /* Use flexbox to align icon and text */
+    justify-content: center;
+    /* Center contents horizontally */
+    align-items: center;
+    /* Center contents vertically */
     margin: 15px auto;
 
 }
 
 #loadMoreBtn i {
-    margin-right: 10px;  /* Space between the icon and the text */
+    margin-right: 10px;
+    /* Space between the icon and the text */
 }
 
 #loadMoreBtn:hover {
-    background-color: #e7ab04;  /* Darken background on hover */
-    transform: scale(1.05);  /* Slightly increase size on hover */
+    background-color: #e7ab04;
+    /* Darken background on hover */
+    transform: scale(1.05);
+    /* Slightly increase size on hover */
 }
 
 /* All product Window end */
@@ -181,7 +196,7 @@
     .all_products .filter.active {
         z-index: 100;
         opacity: 1;
-    } */    
+    } */
 
     .all_products .filter {
         position: fixed;
@@ -199,7 +214,7 @@
 
     .all_products .filter.filter-active {
         left: 0;
-    }    
+    }
 
     .all_products .products_dev {
         width: 100%;
@@ -228,9 +243,70 @@
         width: 48%;
     }
 
-    
+
 }
 
-@media(max-width: 550px) {}
+@media(max-width: 550px) {
+
+    .product .img_product .img_hover,
+    .product .img_product img {
+        height: 150px;
+    }
+}
+
+@media(max-width: 450px) {
+
+    .product {
+        padding: 20px 10px;
+    }
+
+    .product .img_product .img_hover, .product .img_product img {
+        height: 160px;
+    }
+    
+    .product .stars span {
+        margin-inline-start: -10px;
+    }
+ 
+}
+
+@media(max-width: 375px) {
+
+    .product .img_product .img_hover, .product .img_product img {
+        height: 150px;
+    }
+
+    .product .stars span {
+        margin-inline-start: -10px;
+    }
+ 
+}
+
+@media(max-width: 325px) {
+
+    .product .img_product .img_hover,
+    .product .img_product img {
+        height: 120px;
+    }
+
+    .product {
+
+        min-height: unset;
+        max-height: 450px;
+        height: 360px;
+    }
+
+    .price {
+        font-size: 18px;
+    }
+
+    .product .stars span {
+        margin-inline-start: -26px;
+    }
+}
+
+
+
+
 
 /* All product Responsiv End*/
