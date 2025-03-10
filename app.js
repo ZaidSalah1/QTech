@@ -13,16 +13,12 @@ const BASE_URL = process.env.BASE_URL || ""; // Define a base URL from env varia
 
 app.use(express.json());
 
-const connection = mysql.createPool({
-    host: process.env.DB_HOST,  // sql109.infinityfree.com
-    user: process.env.DB_USER,  // if0_38335742
-    password: process.env.DB_PASSWORD,  // (Your vPanel Password)
-    database: process.env.DB_NAME,  // if0_38335742_QTech
-    waitForConnections: true,
-    connectionLimit: 5,
-    queueLimit: 0
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '', // Fixed typo
+    database: 'ecommerce store'
 });
-<<<<<<< HEAD
 
 // const connection = mysql.createPool({
 //     host: process.env.DB_HOST,  // sql109.infinityfree.com
@@ -33,38 +29,18 @@ const connection = mysql.createPool({
 //     connectionLimit: 5,
 //     queueLimit: 0
 // });
-=======
->>>>>>> 163f93e1dec5d7330c5240dceaa13a2ca57ca79d
 
 
 
-
-<<<<<<< HEAD
 connection.connect((err) => {
-=======
-connection.getConnection((err, conn) => {
->>>>>>> 163f93e1dec5d7330c5240dceaa13a2ca57ca79d
     if (err) {
         console.log("Error connection: ", err.stack);
         return;
-    }
-
-    try {
-        // Perform your database operations here
-        conn.query('SELECT * FROM products', (err, results) => {
-            if (err) {
-                console.log('Error executing query:', err);
-            } else {
-                console.log('Query results:', results);
-            }
-        });
-    } catch (error) {
-        console.log("Error during query execution: ", error);
-    } finally {
-        // Always release the connection in the finally block
-        conn.release();  // This will execute regardless of whether there was an error or not
+    } else {
+        console.log("Connected!!!");
     }
 });
+
 
 
 
