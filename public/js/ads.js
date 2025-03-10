@@ -34,7 +34,7 @@ function updateAdsSwiper(adsData) {
     });
 
     // ✅ Reinitialize Swiper
-    new Swiper(".slide-swp", {
+       var swiper = new Swiper(".slide-swp", {
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
@@ -43,18 +43,17 @@ function updateAdsSwiper(adsData) {
             rotate: 0,
             stretch: 0,
             depth: 100,
-            modifier: 1,
+            modifier: 1, // Adjust this value to control the size difference
             slideShadows: false,
         },
         pagination: {
             el: ".swiper-pagination",
-            dynamicBullets: true,
+            dynamicBullests: true,
             clickable: true
         },
         autoplay: {
             delay: 2500,
-        },
-        loop: true
+        }, loop: true
     });
 }
 
