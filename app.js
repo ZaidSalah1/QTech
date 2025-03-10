@@ -20,12 +20,18 @@ const connection = mysql.createConnection({
     password: '', // Fixed typo
     database: 'ecommerce store'
 });
-// const connection = mysql.createConnection({
-//     host: process.env.DB_HOST,  // Set by Render
-//     user: process.env.DB_USER,  // Set by Render
-//     password: process.env.DB_PASSWORD,  // Set by Render
-//     database: process.env.DB_NAME  // Set by Render
+
+// const connection = mysql.createPool({
+//     host: process.env.DB_HOST,  // sql109.infinityfree.com
+//     user: process.env.DB_USER,  // if0_38335742
+//     password: process.env.DB_PASSWORD,  // (Your vPanel Password)
+//     database: process.env.DB_NAME,  // if0_38335742_QTech
+//     waitForConnections: true,
+//     connectionLimit: 5,
+//     queueLimit: 0
 // });
+
+
 
 
 connection.connect((err) => {

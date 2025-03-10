@@ -161,8 +161,7 @@
     padding: 20px;
     border-radius: 5px;
     width: 100%;
-    display: grid
-;
+    display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 100px;
 }
@@ -208,9 +207,97 @@
     flex-direction: column;
 }
 
-.checkout-form-group{
+.checkout-form-group {
     display: flex;
     flex-direction: column;
+}
+
+
+.overlayOrder {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Black with opacity */
+    z-index: 2500;
+    /* Ensure it's behind the modal but in front of other content */
+}
+
+.placeOrderModal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: auto;
+    width: fit-content;
+    /* background-color: #d8efff; */
+    background-color: #ffffff;
+
+    padding: 50px;
+    border-radius: 10px;
+    position: fixed;
+    /* This will center it on the page */
+    top: 50%;
+    /* Position it in the middle of the page vertically */
+    left: 50%;
+    /* Position it in the middle of the page horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust for the exact center */
+    z-index: 2501;
+    /* Ensure modal is above the overlayOrder */
+    height: 350px;
+    width: 550px;
+}
+
+
+
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #FF4B5C;
+    /* Soft red color */
+    cursor: pointer;
+    /* Indicate that it's clickable */
+    transition: all 0.3s ease-in-out;
+    /* Smooth transition effect */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    /* Add a subtle shadow for depth */
+}
+
+.close:hover {
+    background-color: #FF2D3C;
+    /* Darker red on hover */
+    transform: scale(1.1);
+    /* Slightly increase the size */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* Enhance shadow on hover */
+}
+
+.close i {
+    color: white;
+    font-size: 22px;
+    /* Increase font size for better visibility */
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    /* Smooth transition on hover */
+}
+
+.close:hover i {
+    transform: rotate(90deg);
+    /* Add a rotation effect when hovered */
 }
 
 
@@ -221,14 +308,37 @@
 }
 
 @media(max-width: 1000px) {
-    .checkout form{
+    .checkout form {
         display: unset;
     }
+
+    .placeOrderModal {
+        height: 340px;
+        width: 450px;
+    }
+
 }
 
 
 @media(max-width: 550px) {
     .username-checkout {
         display: unset;
+    }
+
+    .placeOrderModal {
+        height: 330px;
+        width: 320px;
+        text-align: center;
+        font-size: 13px;
+    }
+}
+
+@media(max-width: 376px) {
+
+    .placeOrderModal {
+        height: 290px;
+        width: 290px;
+        text-align: center;
+        font-size: 13px;
     }
 }
