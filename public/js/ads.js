@@ -1,24 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     Promise.all([
-<<<<<<< HEAD
-        fetch('/ads').then(res => res.json()),
-        fetch('/ads/category-images').then(res => res.json())
-    ])
-        .then(([adsData, categoryImagesData]) => {
-            console.log("Ads Data:", adsData);
-            console.log("Category Images Data:", categoryImagesData);
-
-            // ✅ Update Ads Swiper
-            updateAdsSwiper(adsData);
-
-            // ✅ Update Category Images
-            updateCategoryImages(categoryImagesData);
-        })
-        .catch(error => {
-            console.error("Error fetching ads or category images:", error);
-        });
-=======
         fetch('/ads').then(res => res.json()),  
         fetch('/ads/category-images').then(res => res.json())  
     ])
@@ -35,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(error => {
         console.error("Error fetching ads or category images:", error);
     });
->>>>>>> 163f93e1dec5d7330c5240dceaa13a2ca57ca79d
 });
 
 function updateAdsSwiper(adsData) {
@@ -54,11 +35,7 @@ function updateAdsSwiper(adsData) {
     });
 
     // ✅ Reinitialize Swiper
-<<<<<<< HEAD
-    var swiper = new Swiper(".slide-swp", {
-=======
        var swiper = new Swiper(".slide-swp", {
->>>>>>> 163f93e1dec5d7330c5240dceaa13a2ca57ca79d
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
@@ -79,7 +56,6 @@ function updateAdsSwiper(adsData) {
             delay: 2500,
         }, loop: true
     });
-<<<<<<< HEAD
 
 }
 
@@ -106,8 +82,6 @@ function updateCategoryImages(categoryImagesData) {
     } else {
         console.error("Container elements not found.");
     }
-=======
->>>>>>> 163f93e1dec5d7330c5240dceaa13a2ca57ca79d
 }
 
 function updateCategoryImages(categoryImagesData) {
@@ -116,7 +90,6 @@ function updateCategoryImages(categoryImagesData) {
         return;
     }
 
-<<<<<<< HEAD
 
 
 
@@ -205,7 +178,6 @@ function updateCategoryImages(categoryImagesData) {
 //         })
 //         .catch(error => console.error("Error fetching category images:", error));
 // });
-=======
     const discountedImgContainer = document.querySelector('#section1 .categ_img');
     const specialImgContainer = document.querySelector('#section2 .categ_img');
 
@@ -224,4 +196,3 @@ function updateCategoryImages(categoryImagesData) {
         console.error("Container elements not found.");
     }
 }
->>>>>>> 163f93e1dec5d7330c5240dceaa13a2ca57ca79d
