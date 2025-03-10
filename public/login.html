@@ -190,10 +190,9 @@
                         updateHeader(true, data.message);
 
                         // Open dashboard in a new tab
-                        window.open("/dashboard", "_blank");
+                        // window.open("/dashboard", "_blank");
 
-                        // Redirect to index.html
-                        // window.location.href = "index.html";
+                        window.location.href = "/dashboard";
                     } else {
                         // Display error message
                         errorMessage.textContent = data.message;
