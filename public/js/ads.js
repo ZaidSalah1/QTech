@@ -196,3 +196,4 @@ function updateCategoryImages(categoryImagesData) {
         console.error("Container elements not found.");
     }
 }
+
