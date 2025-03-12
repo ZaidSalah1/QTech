@@ -381,8 +381,21 @@
     .ordersummary .items .items_cart h1 {
         font-size: 18px;
     }
+}
 
+@media (max-width: 375px) {
 
+    .product .img_product img,
+    .product .img_product .img_hover {
+        height: 150px;
+    }
 
+    .product {
+        padding: 3px;
+    }
+
+    .top_slide h2 {
+        font-size: 18px;
+    }
 }
 
