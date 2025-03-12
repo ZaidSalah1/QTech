@@ -128,23 +128,26 @@
             const query = localStorage.getItem('searchInput');
             const products_dev = document.getElementById('products_dev');
 
+            alert("Query from localStorage: " + query);
 
             if (!all_products_json) {
-                console.error("Products data is not yet loaded!");
+                alert("Products data is not yet loaded!");
                 products_dev.textContent = "Loading products...";
                 setTimeout(searchResultScreen, 500); // Retry after 500ms
                 return;
             }
 
             if (query) {
-                const query = localStorage.getItem('searchInput');
-                console.log("Query from localStorage:", query); // Check the console if it's correctly fetched
-                alert("Query from localStorage: " + query);
+                alert("Searching for query: " + query);
 
                 products_dev.innerHTML = ``;
+                alert("all_products_json: " + JSON.stringify(all_products_json));
+
                 const filteredProducts = Object.keys(all_products_json)
                     .map(key => all_products_json[key])
-                    .filter(product => product.name.toLowerCase().includes(query));
+                    .filter(product => product.name.toLowerCase().includes(query.toLowerCase()));
+
+                alert("Filtered products count: " + filteredProducts.length);
 
                 if (filteredProducts.length > 0) {
                     filteredProducts.forEach(product => {
@@ -195,18 +198,21 @@
                 `;
                     });
                 } else {
+                    alert("No products found.");
                     products_dev.textContent = "Nothing found";
                 }
             } else {
+                alert("No search input found.");
                 products_dev.textContent = 'No search input found.';
             }
         }
 
-        // Ensure script runs only when products are available
         function waitForProductsAndSearch() {
             if (all_products_json) {
+                alert("Products loaded, starting search...");
                 searchResultScreen();
             } else {
+                alert("Waiting for products...");
                 setTimeout(waitForProductsAndSearch, 500);
             }
         }
