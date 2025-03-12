@@ -1,13 +1,15 @@
-// Fetch order status counts from the backend
 fetch("/ordersCount")
     .then(response => response.json())
     .then(data => {
+        // Define colors in sync with the order
+        const statusColors = ["#FF6384", "#4BC0C0", "#36A2EB", "#FFCE56"];
+
         // Create Chart Data
         const orderData = {
             labels: data.labels,
             datasets: [{
                 data: data.data,
-                backgroundColor: ["#FF6384", "#4BC0C0",  "#36A2EB", "#FFCE56"],
+                backgroundColor: statusColors,
                 hoverOffset: 4
             }]
         };
@@ -39,8 +41,6 @@ fetch("/ordersCount")
 
         // Display Status Counts
         const statusCounts = document.getElementById('statusCounts');
-        const statusColors = ["#FF6384", "#4BC0C0",  "#36A2EB", "#FFCE56"];
-
         statusCounts.innerHTML = ''; // Clear old counts
         orderData.labels.forEach((label, index) => {
             const count = orderData.datasets[0].data[index];
@@ -55,6 +55,7 @@ fetch("/ordersCount")
     .catch(error => {
         console.error("Error fetching order status counts: ", error);
     });
+
 
 
 
