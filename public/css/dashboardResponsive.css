@@ -416,6 +416,25 @@ header .profileAdmin .profileInfo .AdminEmail {
         width: 180px;
         margin-right: 65px;
     }
+
+    .searchDropdown {
+        width: 350px;
+        left: -20px;
+    }
+
+    .searchItem img {
+        width: 90px;
+    }
+
+    .name_price .name { 
+        font-size: 14px;
+    }
+
+    .price .search_price {
+        font-size: 14px;
+        margin-top: unset;
+    }
+    
 }
 
 @media (max-width: 550px) {
@@ -435,6 +454,18 @@ header .profileAdmin .profileInfo .AdminEmail {
     .stats .row_stat {
         grid-template-columns: 1fr;
         margin-left: auto;
+    }
+
+    .name_price .name { 
+        font-size: 16px;
+    }
+
+    .price .search_price {
+        font-size: 16px;
+    }
+
+    .price .old_price {
+        font-size: 16px;
     }
 }
 
@@ -460,12 +491,42 @@ header .profileAdmin .profileInfo .AdminEmail {
     .search-container {
         width: 130px;
     }
+
+    
+    .searchDropdown {
+        width: 280px;
+        left: -20px;
+    }
+
+    .searchItem img {
+        width: 90px;
+    }
+
+    .name_price .name { 
+        font-size: 16px;
+    }
+
+    .price .search_price {
+        font-size: 16px;
+        margin-top: unset;
+    }
+
+    .price .old_price {
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 320px) {
     .search-container {
         width: 100px;
     }
+
+    header .container {
+        margin-left: 9%;
+    }
+
+    
+
 }
 
 
@@ -859,6 +920,12 @@ header .profileAdmin .profileInfo .AdminEmail {
     @media (max-width: 600px) {
         .custom-dropdown {
             width: 100%;
+        }
+    }
+
+    @media (max-width: 350px){
+        .order_product .order_texts .product-names-container {
+            width: 235px;
         }
     }
 
