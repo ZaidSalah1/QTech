@@ -20,6 +20,15 @@ app.use(express.json());
 //     database: 'ecommerce store'
 // });
 
+// connection.connect((err) => {
+//     if (err) {
+//         console.log("Error connection: ", err.stack);
+//         return;
+//     } else {
+//         console.log("Connected!!!");
+//     }
+// });
+
 
 const connection = mysql.createPool({
     host: process.env.DB_HOST,  // sql109.infinityfree.com
@@ -41,6 +50,7 @@ connection.getConnection((err, conn) => {
         conn.release();  // Make sure to release the connection back to the pool
     }
 });
+
 
 
 
@@ -323,24 +333,36 @@ app.get("/products", (req, res) => {
             p.created_at DESC;  -- Order by created_at in descending order
     `;
 
-    connection.query(sql, (err, results) => {
+    // Get a connection from the pool
+    connection.getConnection((err, conn) => {
         if (err) {
-            console.error("Error fetching products, ", err);
+            console.error("Error getting connection: ", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
 
-        // Convert the comma-separated string into an array
-        results.forEach(product => {
-            if (product.images) {
-                product.images = product.images.split(','); // Split the string into an array
-            } else {
-                product.images = []; // If no images, set to an empty array
-            }
-        });
+        // Execute the query using the connection
+        conn.query(sql, (err, results) => {
+            conn.release(); // Release the connection back to the pool
 
-        res.json(results);
+            if (err) {
+                console.error("Error fetching products, ", err);
+                return res.status(500).json({ message: "Internal Server Error" });
+            }
+
+            // Convert the comma-separated string into an array
+            results.forEach(product => {
+                if (product.images) {
+                    product.images = product.images.split(','); // Split the string into an array
+                } else {
+                    product.images = []; // If no images, set to an empty array
+                }
+            });
+
+            res.json(results);
+        });
     });
 });
+
 
 app.get("/products2", (req, res) => {
     const limit = parseInt(req.query.limit) || 15; // Default limit
@@ -369,19 +391,31 @@ app.get("/products2", (req, res) => {
         LIMIT ? OFFSET ?;  -- Pagination added
     `;
 
-    connection.query(sql, [limit, offset], (err, results) => {
+    // Get a connection from the pool
+    connection.getConnection((err, conn) => {
         if (err) {
-            console.error("Error fetching products:", err);
+            console.error("Error getting connection: ", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
 
-        results.forEach(product => {
-            product.images = product.images ? product.images.split(',') : [];
-        });
+        // Execute the query using the connection
+        conn.query(sql, [limit, offset], (err, results) => {
+            conn.release(); // Release the connection back to the pool
 
-        res.json(results);
+            if (err) {
+                console.error("Error fetching products:", err);
+                return res.status(500).json({ message: "Internal Server Error" });
+            }
+
+            results.forEach(product => {
+                product.images = product.images ? product.images.split(',') : [];
+            });
+
+            res.json(results);
+        });
     });
 });
+
 
 app.get("/discountedProducts", (req, res) => {
     const sql = `
@@ -409,24 +443,36 @@ app.get("/discountedProducts", (req, res) => {
         LIMIT 15;  -- Limit to 15 products with a discount
     `;
 
-    connection.query(sql, (err, results) => {
+    // Get a connection from the pool
+    connection.getConnection((err, conn) => {
         if (err) {
-            console.error("Error fetching products, ", err);
+            console.error("Error getting connection: ", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
 
-        // Convert the comma-separated string into an array
-        results.forEach(product => {
-            if (product.images) {
-                product.images = product.images.split(','); // Split the string into an array
-            } else {
-                product.images = []; // If no images, set to an empty array
-            }
-        });
+        // Execute the query using the connection
+        conn.query(sql, (err, results) => {
+            conn.release(); // Release the connection back to the pool
 
-        res.json(results);
+            if (err) {
+                console.error("Error fetching products, ", err);
+                return res.status(500).json({ message: "Internal Server Error" });
+            }
+
+            // Convert the comma-separated string into an array
+            results.forEach(product => {
+                if (product.images) {
+                    product.images = product.images.split(','); // Split the string into an array
+                } else {
+                    product.images = []; // If no images, set to an empty array
+                }
+            });
+
+            res.json(results);
+        });
     });
 });
+
 
 app.get("/getRandomProducts", (req, res) => {
     const sql = `
@@ -452,24 +498,36 @@ app.get("/getRandomProducts", (req, res) => {
         LIMIT 15;  -- Limit the result to 15 random products
     `;
 
-    connection.query(sql, (err, results) => {
+    // Get a connection from the pool
+    connection.getConnection((err, conn) => {
         if (err) {
-            console.error("Error fetching products, ", err);
+            console.error("Error getting connection: ", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
 
-        // Convert the comma-separated string into an array
-        results.forEach(product => {
-            if (product.images) {
-                product.images = product.images.split(','); // Split the string into an array
-            } else {
-                product.images = []; // If no images, set to an empty array
-            }
-        });
+        // Execute the query using the connection
+        conn.query(sql, (err, results) => {
+            conn.release(); // Release the connection back to the pool
 
-        res.json(results);
+            if (err) {
+                console.error("Error fetching products, ", err);
+                return res.status(500).json({ message: "Internal Server Error" });
+            }
+
+            // Convert the comma-separated string into an array
+            results.forEach(product => {
+                if (product.images) {
+                    product.images = product.images.split(','); // Split the string into an array
+                } else {
+                    product.images = []; // If no images, set to an empty array
+                }
+            });
+
+            res.json(results);
+        });
     });
 });
+
 
 
 app.get("/productsCount", (req, res) => {
