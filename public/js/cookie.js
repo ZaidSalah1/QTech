@@ -501,74 +501,71 @@ document.addEventListener("DOMContentLoaded", function () {
     function searchItem() {
         const searchInput = document.getElementById('searchInput');
         const searchDropdown = document.querySelector('.searchDropdown');
-
+    
+        console.log("searchInput:", searchInput);  // Debugging the input element
+        console.log("searchDropdown:", searchDropdown);  // Debugging the dropdown element
+    
         searchInput.addEventListener('input', () => {
-            
-
-
             const query = searchInput.value.toLowerCase();
+            console.log("Search query:", query);  // Debugging the input query
+    
             searchDropdown.innerHTML = ''; // Clear previous search results
-
+    
             const filteredProducts = Object.keys(all_products_json)
                 .map(key => all_products_json[key])
                 .filter(product => {
                     return product.name.toLowerCase().includes(query);
                 });
-
+    
+            console.log("Filtered products:", filteredProducts);  // Debugging filtered products
+    
             if (filteredProducts.length === 0) {
-                // Display "No results found" message if no matches
                 searchDropdown.innerHTML = `
-            <div class="noResult">
-                <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
-                <p>No Result Found</p>
-            </div>
-        `;
+                    <div class="noResult">
+                        <i class="fas fa-search"></i>
+                        <p>No Result Found</p>
+                    </div>
+                `;
             } else {
-
                 localStorage.setItem('searchInput', query);
-
-                // Display filtered products
+    
                 filteredProducts.forEach(product => {
+                    console.log("Product:", product);  // Debugging each product
                     const images = product.images || [];
                     let img1 = images[0] || 'default.jpg';
-
-                    // Ensure the image path is valid
+    
                     img1 = img1.startsWith("https") ? img1 : `${img1}`;
-
-                    // Create a container for the search item
+    
                     const searchItem = document.createElement('a');
                     searchItem.href = `item.html?id=${product.id}`;
                     searchItem.className = 'searchItem';
-
-                    // Add a placeholder image or loading spinner
+    
                     searchItem.innerHTML = `
-                    <img src="../img/default.jpg" data-src="${img1 || '../img/default.jpg'}" alt="${product.name}" loading="lazy">
-                    <div class="name_price">
-                        <p class="name">${product.name}</p>
-                        <div class="price">
-                            <p class="search_price">₪${product.price}</p>
-                            ${product.discount && product.discount < product.price ? `<p class="old_price">₪${product.discount}</p>` : ''}
+                        <img src="../img/default.jpg" data-src="${img1 || '../img/default.jpg'}" alt="${product.name}" loading="lazy">
+                        <div class="name_price">
+                            <p class="name">${product.name}</p>
+                            <div class="price">
+                                <p class="search_price">₪${product.price}</p>
+                                ${product.discount && product.discount < product.price ? `<p class="old_price">₪${product.discount}</p>` : ''}
+                            </div>
                         </div>
-                    </div>
-                `;
-
-                    // Append the search item to the dropdown
+                    `;
+    
                     searchDropdown.appendChild(searchItem);
-
-                    // Load the actual image asynchronously
+    
                     const imgElement = searchItem.querySelector('img');
                     const actualImage = new Image();
                     actualImage.src = imgElement.dataset.src;
                     actualImage.onload = () => {
-                        imgElement.src = actualImage.src; // Replace placeholder with actual image
+                        imgElement.src = actualImage.src;
                     };
                 });
             }
-
-            // Show the dropdown
+    
             searchDropdown.style.display = "block";
         });
     }
+    
 
 });
 

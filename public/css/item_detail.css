@@ -374,5 +374,15 @@
         width: 100%;
     }
 
+    .ordersummary .items .items_cart img {
+        width: 100px;
+    }
+
+    .ordersummary .items .items_cart h1 {
+        font-size: 18px;
+    }
+
+
+
 }
 

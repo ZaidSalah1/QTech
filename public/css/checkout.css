@@ -333,6 +333,18 @@
     }
 }
 
+
+@media (max-width: 425px){ 
+    .ordersummary .items,
+    .ordersummary .items .items_cart {
+        padding: 0px;
+    }
+
+    .ordersummary .items .items_cart img {
+        width: 100px;
+    }
+}
+
 @media(max-width: 376px) {
 
     .placeOrderModal {
