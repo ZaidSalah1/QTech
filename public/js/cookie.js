@@ -358,19 +358,12 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("searchFormMobile is null");
         }
 
-        // searchForm.addEventListener("click", () => {
-        //     const searchDropdown = document.querySelector('.searchDropdown');
-        //     console.log("searchDropdown", searchDropdown);
-        //     getRandomSearchItem();
-        //     searchItem();
-        // })
-        searchForm.addEventListener("touchstart", (e) => {
-            e.preventDefault(); // Prevent default touch behavior
+        searchForm.addEventListener("click", () => {
             const searchDropdown = document.querySelector('.searchDropdown');
             console.log("searchDropdown", searchDropdown);
             getRandomSearchItem();
             searchItem();
-        });
+        })
 
     }
 
@@ -505,12 +498,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+        // Add debounce to the search input event listener
+        let timeout;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchInput = document.getElementById('searchInputMobile');
+            const searchDropdown = document.querySelector('.searchDropdown');
+    
+            searchInput.addEventListener('input', () => {
+                // Clear previous timeout and set a new one to debounce input
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    const query = searchInput.value.toLowerCase();
+                    console.log("Search Query:", query);  // Log to check the query value
+    
+                    // Clear previous search results
+                    searchDropdown.innerHTML = '';
+    
+                    // Call the function to filter products
+                    searchItems(query);
+                }, 500); // Delay of 500ms
+            });
+        });
+
     function searchItem() {
         const searchInput = document.getElementById('searchInput');
         const searchDropdown = document.querySelector('.searchDropdown');
 
         searchInput.addEventListener('input', () => {
-
+            
 
 
             const query = searchInput.value.toLowerCase();
