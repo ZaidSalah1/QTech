@@ -407,6 +407,14 @@ header.mobile {
         width: 100%;
     }
 
+    .product .img_product img {
+        height: 155px;
+    }
+
+    .product .img_product .img_hover {
+        height: 155px;
+    }
+
 
 
     header .top-nav .cart_header .language {
