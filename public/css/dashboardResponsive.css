@@ -514,6 +514,11 @@ header .profileAdmin .profileInfo .AdminEmail {
     .price .old_price {
         font-size: 16px;
     }
+
+    .chart-container {
+        min-width: 240px;
+        padding: 10px;
+    }
 }
 
 @media (max-width: 320px) {
@@ -525,7 +530,29 @@ header .profileAdmin .profileInfo .AdminEmail {
         margin-left: 9%;
     }
 
-    
+    .notification {
+
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }    
+
+    header .profileAdmin .adminImg img {
+        width: 35px;
+        height: 35px;
+    }
+
+    header .profileAdmin {
+        height: 25px;
+    }
+
+    .headerInfo  {
+        gap: 2px;
+    }
+
+    .search-container {
+        width: 85px;
+    }
 
 }
 
