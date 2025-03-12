@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>QTech</title>
     <link rel="icon" type="image/png" href="img/store icon.png">
     <!--File Css-->
@@ -14,7 +13,6 @@
 
     <!--Font Awesom-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="http://localhost:8080/target/target-script-min.js#anonymous"></script>
 
 </head>
 
@@ -123,17 +121,13 @@
     </script>
 
 
-    <script src="js/main.js"></script>
-    <script src="js/index.js"></script>
-    <!-- <script src="js/login.js"></script> -->
-    <script src="js/auth.js"></script>
-
 
 
     <script>
         function searchResultScreen() {
             const query = localStorage.getItem('searchInput');
             const products_dev = document.getElementById('products_dev');
+
 
             if (!all_products_json) {
                 console.error("Products data is not yet loaded!");
@@ -143,6 +137,10 @@
             }
 
             if (query) {
+                const query = localStorage.getItem('searchInput');
+                console.log("Query from localStorage:", query); // Check the console if it's correctly fetched
+                alert("Query from localStorage: " + query);
+
                 products_dev.innerHTML = ``;
                 const filteredProducts = Object.keys(all_products_json)
                     .map(key => all_products_json[key])
@@ -245,7 +243,7 @@
 
 
 
-    <script src="js/main.js"></script>
+    <!-- <script src="js/main.js"></script> -->
     <script src="js/products.js" defer></script>
     <script src="js/cookie.js"></script>
     <!-- <script src="js/login.js"></script> -->
