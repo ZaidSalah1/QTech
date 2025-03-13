@@ -41,18 +41,20 @@ const connection = mysql.createPool({
     queueLimit: 0
 });
 
-
-
-connection.connect((err) => {
+// Get a connection from the pool
+connection.getConnection((err, conn) => {
     if (err) {
-        console.log("Error connection: ", err.stack);
+        console.log("Error getting connection: ", err.stack);
         return;
-    } else {
-        console.log("Connected!!!");
-        conn.release();
     }
-});
 
+    console.log("Connected to MySQL!!!");
+
+    // Perform your query or other tasks here
+
+    // Don't forget to release the connection back to the pool
+    conn.release();
+});
 
 
 
