@@ -580,7 +580,7 @@
     </style>
 
 
-    <script>
+    <!-- <script>
         // Edit Main Ads📸
         let adsImages = []; // Images from DB
         let uploadedAdsImg = []; // Newly uploaded images
@@ -829,8 +829,269 @@
             }
         });
 
-    </script>
+    </script> -->
 
+    <script>
+        // Edit Main Ads📸
+        let adsImages = []; // Images from DB
+        let uploadedAdsImg = []; // Newly uploaded images
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchAdsData()
+                .then(() => console.log("Ads data loaded successfully"))
+                .catch(error => console.error("Error fetching ads:", error));
+        });
+    
+        // Function to fetch ads data
+        function fetchAdsData() {
+            return new Promise((resolve, reject) => {
+                fetch('/ads')  // Fetch ads from DB
+                    .then(response => response.json())
+                    .then(data => {
+                        const swiperContainer = document.querySelector('.swiper-wrapper');
+                        const imgsContainer = document.querySelector('.imgs_container');
+    
+                        data.forEach(ad => {
+                            adsImages.push(ad.image_url); // Store DB images
+    
+                            // Add image to Swiper and make it clickable
+                            swiperContainer.innerHTML += `
+                                <div class="swiper-slide ads-swiper-slide">
+                                    <a href="${ad.url_link || '#'}" target="_blank">
+                                        <img src="${ad.image_url}" alt="Ad Image">
+                                    </a>
+                                </div>
+                            `;
+    
+                            imgsContainer.appendChild(createImageElement(ad.image_url, "db", null, ad.id, ad.url_link));
+                        });
+    
+                        resolve(); // Resolve promise after data processing
+                    })
+                    .catch(error => reject(error)); // Reject if there's an error fetching the data
+            });
+        }
+    
+        // Handle file selection
+        document.getElementById("mainAdsFileInput").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedAdsImg.push(file);
+                displayUploadedAdsImages();
+            }
+        });
+    
+        // Function to create image elements (for both DB and uploaded images)
+        function createImageElement(imageSrc, type, index = null, adId = null, urlLink = "#") {
+            const imgContainer = document.createElement("div");
+            imgContainer.classList.add("main_ads_img");
+    
+            // Create the clickable link
+            const link = document.createElement("a");
+            link.href = urlLink || "#"; // Default to "#" if no link exists
+            link.target = "_blank"; // Open in new tab
+    
+            // Create the image element
+            const img = document.createElement("img");
+            img.src = imageSrc;
+            img.width = 150;
+            img.alt = "Ad Image";
+    
+            link.appendChild(img); // Wrap image inside link
+    
+            // Create the delete icon
+            const deleteIcon = document.createElement("i");
+            deleteIcon.classList.add("fa-solid", "fa-trash-can");
+            deleteIcon.style.cursor = "pointer";
+    
+            // Create the edit link container
+            const editLinkAd = document.createElement("span");
+            editLinkAd.classList.add("editLinkAd");
+            editLinkAd.style.cursor = "pointer";
+    
+            // Create the edit link icon
+            const linkIcon = document.createElement("i");
+            linkIcon.classList.add("fa-solid", "fa-link");
+    
+            // Add text next to the icon
+            const linkText = document.createTextNode(" Add Link");
+    
+            // Append icon and text to the editLinkAd span
+            editLinkAd.appendChild(linkIcon);
+            editLinkAd.appendChild(linkText);
+    
+            // Show modal when "Add Link" is clicked
+            editLinkAd.addEventListener("click", function () {
+                openModal(adId); // Open modal with this ad's ID
+            });
+    
+            // Remove image when delete icon is clicked
+            deleteIcon.addEventListener("click", function () {
+                if (type === "db") {
+                    adsImages = adsImages.filter(url => url !== imageSrc);
+                } else if (type === "upload" && index !== null) {
+                    uploadedAdsImg.splice(index, 1);
+                }
+                displayUploadedAdsImages();
+            });
+    
+            // Append elements to the container
+            imgContainer.appendChild(link); // Make image clickable
+            imgContainer.appendChild(deleteIcon);
+            imgContainer.appendChild(editLinkAd);
+    
+            return imgContainer;
+        }
+    
+        // Display uploaded and DB images together
+        function displayUploadedAdsImages() {
+            const imgsContainer = document.querySelector(".imgs_container");
+            imgsContainer.innerHTML = ""; // Clear container
+    
+            // Re-display DB images
+            adsImages.forEach(url => {
+                imgsContainer.appendChild(createImageElement(url, "db"));
+            });
+    
+            // Re-display uploaded images
+            uploadedAdsImg.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imgsContainer.appendChild(createImageElement(e.target.result, "upload", index));
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    
+        // Handle Upload Button Click
+        document.querySelector('.btnAd').addEventListener('click', async () => {
+            if (uploadedAdsImg.length > 0 || adsImages.length > 0) {
+    
+                // Show the loading animation first
+                showLoadingEditAnimation();
+    
+                const uploadedAdsImgURL = [];
+    
+                // Set a timeout (for 2 seconds in this case) before starting the upload
+                await new Promise(resolve => setTimeout(resolve, 2000));
+    
+                // Upload new images to the server
+                for (const file of uploadedAdsImg) {
+                    const formData = new FormData();
+                    formData.append("file", file);
+    
+                    try {
+                        const response = await fetch("upload-ads-image", { method: "POST", body: formData });
+                        const data = await response.json();
+    
+                        if (data.url) {
+                            uploadedAdsImgURL.push(data.url);
+                        }
+                    } catch (error) {
+                        console.error("Error uploading image:", error);
+                    }
+                }
+    
+                // Combine DB images + newly uploaded image URLs
+                const allAdsImages = [...adsImages, ...uploadedAdsImgURL];
+    
+                const formDataToSend = {
+                    ad_type: "big",
+                    uploadedAdsImgURL: allAdsImages
+                };
+    
+                // Send data to the server
+                try {
+                    const response = await fetch("/upload-ads", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formDataToSend)
+                    });
+                    const data = await response.json();
+                    console.log("Success:", data);
+    
+                    // Hide loading animation and show success modal
+                    hideLoadingEditAnimation();
+                    showSuccessAdsModal();
+                } catch (error) {
+                    console.error("Error uploading ads:", error);
+                }
+            }
+        });
+    
+        // Function to open modal
+        function openModal(adId) {
+            const modal = document.getElementById("linkModal");
+            modal.style.display = "flex";  // Show modal
+            modal.dataset.adId = adId; // Store ad ID in modal
+        }
+    
+        // Function to close modal
+        function closeModal() {
+            document.getElementById("linkModal").style.display = "none";
+        }
+    
+        // Close modal when clicking "X"
+        document.querySelector(".close").addEventListener("click", closeModal);
+    
+        // Close modal when clicking outside of it
+        window.addEventListener("click", function (event) {
+            const modal = document.getElementById("linkModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    
+        // Handle Save Button Click
+        document.getElementById("saveUrl").addEventListener("click", async function () {
+            const newUrl = document.getElementById("urlInput").value.trim(); // Get the URL input
+            const adId = document.getElementById("linkModal").dataset.adId; // Get stored ad ID
+    
+            console.log("New URL:", newUrl);  // Debugging
+            console.log("Ad ID:", adId);  // Debugging
+    
+            // Function to validate URL
+            function isValidUrl(url) {
+                try {
+                    new URL(url);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+    
+            if (!isValidUrl(newUrl)) {
+                alert("Please enter a valid URL.");
+                return;
+            }
+    
+            if (newUrl && adId) {
+                try {
+                    const response = await fetch(`/ads/${adId}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ url_link: newUrl })  // FIXED: Ensure correct key name
+                    });
+    
+                    const data = await response.json();
+                    console.log("Response Data:", data);
+    
+                    if (data.message) {
+                        alert(`Ad link updated successfully for Ad ID: ${adId}`);
+                        closeModal(); // Close modal after saving
+                    } else {
+                        alert("Failed to update link.");
+                    }
+                } catch (error) {
+                    console.error("Error updating ad link:", error);
+                }
+            } else {
+                alert("Please enter a valid URL.");
+            }
+        });
+    
+    </script>
+    
 
     <script>
         var adsSwiper = new Swiper(".ads-swiper", {
