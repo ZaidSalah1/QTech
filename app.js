@@ -13,47 +13,35 @@ const BASE_URL = process.env.BASE_URL || ""; // Define a base URL from env varia
 
 app.use(express.json());
 
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '', // Fixed typo
-//     database: 'ecommerce store'
-// });
-
-
-
-// connection.connect((err) => {
-//     if (err) {
-//         console.log("Error connection: ", err.stack);
-//         return;
-//     } else {
-//         console.log("Connected!!!");
-//     }
-// });
-
-
-
-
-const connection = mysql.createPool({
-    host: process.env.DB_HOST,  // sql109.infinityfree.com
-    user: process.env.DB_USER,  // if0_38335742
-    password: process.env.DB_PASSWORD,  // (Your vPanel Password)
-    database: process.env.DB_NAME,  // if0_38335742_QTech
-    waitForConnections: true,
-    connectionLimit: 5,
-    queueLimit: 0
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '', // Fixed typo
+    database: 'ecommerce store'
 });
 
+// const connection = mysql.createPool({
+//     host: process.env.DB_HOST,  // sql109.infinityfree.com
+//     user: process.env.DB_USER,  // if0_38335742
+//     password: process.env.DB_PASSWORD,  // (Your vPanel Password)
+//     database: process.env.DB_NAME,  // if0_38335742_QTech
+//     waitForConnections: true,
+//     connectionLimit: 5,
+//     queueLimit: 0
+// });
 
-connection.getConnection((err, conn) => {
+
+
+connection.connect((err) => {
     if (err) {
         console.log("Error connection: ", err.stack);
         return;
     } else {
         console.log("Connected!!!");
-        conn.release();  // Make sure to release the connection back to the pool
     }
 });
+
+
 
 
 // Serve static files from the 'public' folder
