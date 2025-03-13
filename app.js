@@ -33,26 +33,27 @@ app.use(express.json());
 
 
 
-// const connection = mysql.createPool({
-//     host: process.env.DB_HOST,  // sql109.infinityfree.com
-//     user: process.env.DB_USER,  // if0_38335742
-//     password: process.env.DB_PASSWORD,  // (Your vPanel Password)
-//     database: process.env.DB_NAME,  // if0_38335742_QTech
-//     waitForConnections: true,
-//     connectionLimit: 5,
-//     queueLimit: 0
-// });
+
+const connection = mysql.createPool({
+    host: process.env.DB_HOST,  // sql109.infinityfree.com
+    user: process.env.DB_USER,  // if0_38335742
+    password: process.env.DB_PASSWORD,  // (Your vPanel Password)
+    database: process.env.DB_NAME,  // if0_38335742_QTech
+    waitForConnections: true,
+    connectionLimit: 5,
+    queueLimit: 0
+});
 
 
-// connection.getConnection((err, conn) => {
-//     if (err) {
-//         console.log("Error connection: ", err.stack);
-//         return;
-//     } else {
-//         console.log("Connected!!!");
-//         conn.release();  // Make sure to release the connection back to the pool
-//     }
-// });
+connection.getConnection((err, conn) => {
+    if (err) {
+        console.log("Error connection: ", err.stack);
+        return;
+    } else {
+        console.log("Connected!!!");
+        conn.release();  // Make sure to release the connection back to the pool
+    }
+});
 
 
 // Serve static files from the 'public' folder
