@@ -161,6 +161,7 @@
 
 /* All product Responsiv */
 
+
 @media (max-width: 1300px) {
     .all_products .products_dev .product {
         width: 30%;
@@ -168,9 +169,10 @@
 
 }
 
+
 @media (max-width: 1200px) {
     .all_products .products_dev .product {
-        width: 48%;
+        width: 30%;
     }
 
 }
