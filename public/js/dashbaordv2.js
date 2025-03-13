@@ -622,168 +622,236 @@ function closeModal() {
 
 // Function to fetch and display orders
 function displayOrders(filter = "All Orders") {
-    return new Promise((resolve, reject) => {
-        const ordersSection = document.getElementById("orders-section");
+    const ordersSection = document.getElementById("orders-section");
 
-        // Set the initial HTML structure for the orders section
-        ordersSection.innerHTML = `
-            <h1 style="color: #033b4a;">Orders</h1>
-            <div class="tab-container">
-                <div class="tab-buttons">
-                    <button class="tab-button ${filter === "All Orders" ? "active" : ""}" data-filter="All Orders">All Orders</button>
-                    <button class="tab-button ${filter === "Pending" ? "active" : ""}" data-filter="Pending">Pending</button>
-                    <button class="tab-button ${filter === "In Progress" ? "active" : ""}" data-filter="In Progress">In Progress</button>
-                    <button class="tab-button ${filter === "Delivered" ? "active" : ""}" data-filter="Delivered">Delivered</button>
-                    <button class="tab-button ${filter === "Cancelled" ? "active" : ""}" data-filter="Cancelled">Cancelled</button>
-                </div>
+    // Set the initial HTML structure for the orders section
+    ordersSection.innerHTML = `
+        <h1 style="color: #033b4a;">Orders</h1>
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button ${filter === "All Orders" ? "active" : ""}" data-filter="All Orders">All Orders</button>
+                <button class="tab-button ${filter === "Pending" ? "active" : ""}" data-filter="Pending">Pending</button>
+                <button class="tab-button ${filter === "In Progress" ? "active" : ""}" data-filter="In Progress">In Progress</button>
+                <button class="tab-button ${filter === "Delivered" ? "active" : ""}" data-filter="Delivered">Delivered</button>
+                <button class="tab-button ${filter === "Cancelled" ? "active" : ""}" data-filter="Cancelled">Cancelled</button>
             </div>
-            
-             <!-- Dropdown for smaller screens -->
-           <div class="filter-container">
-                <label for="order-filter-dropdown"><i class="fa-solid fa-filter"></i> Filter Orders:</label>
-                <select id="order-filter-dropdown" class="custom-dropdown">
-                    <option value="All Orders">All Orders</option>
-                    <option value="Pending">Pending</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-            </div>
+        </div>
+        
+         <!-- Dropdown for smaller screens -->
+       <div class="filter-container">
+            <label for="order-filter-dropdown"><i class="fa-solid fa-filter"></i> Filter Orders:</label>
+            <select id="order-filter-dropdown" class="custom-dropdown">
+                <option value="All Orders">All Orders</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
 
-            <div class="order-list"></div> <!-- Add the order-list container -->
-        `;
 
-        const orderList = ordersSection.querySelector(".order-list");
+        <div class="order-list"></div> <!-- Add the order-list container -->
+    `;
 
-        // Fetch orders from the server
-        fetch("/orders")
-            .then(response => response.json())
-            .then(orders => {
-                // Clear existing orders
-                orderList.innerHTML = "";
+    const orderList = ordersSection.querySelector(".order-list");
 
-                // Filter orders based on the selected filter
-                const filteredOrders = orders.filter(order =>
-                    filter === "All Orders" || order.status === filter
-                );
+    // Fetch orders from the server wrapped in a Promise
+    fetch("/orders")
+        .then(response => response.json())
+        .then(orders => {
+            // Clear existing orders
+            orderList.innerHTML = "";
 
-                // Sort orders by order_date (newest to oldest)
-                const sortedOrders = [...filteredOrders].sort((a, b) => {
-                    return new Date(b.order_date).getTime() - new Date(a.order_date).getTime();
-                });
+            // Filter orders based on the selected filter
+            const filteredOrders = orders.filter(order =>
+                filter === "All Orders" || order.status === filter
+            );
 
-                // Loop through each order and generate HTML
-                sortedOrders.forEach(order => {
-                    const productNames = order.items.map(item => `- ${item.product_name}`).join('<br>');
-                    const productImages = order.items.map(item => item.image || "placeholder.jpg"); // Fallback for missing images
-                    const statusClass = `status-${order.status.toLowerCase().replace(' ', '-')}`;
+            // Sort orders by order_date (newest to oldest)
+            const sortedOrders = [...filteredOrders].sort((a, b) => {
+                return new Date(b.order_date).getTime() - new Date(a.order_date).getTime();
+            });
 
-                    const orderHTML = `
-                        <div class="order_product">
-                            <div class="swiper-container order-swiper">
-                                <div class="swiper-wrapper">
-                                    ${productImages.map(img => `<div class="swiper-slide"><img src="${img}" alt="Product Image"></div>`).join('')}
-                                </div>
-                                <div class="swiper-pagination"></div>
+            // Loop through each order and generate HTML
+            sortedOrders.forEach(order => {
+                const productNames = order.items.map(item => `- ${item.product_name}`).join('<br>');
+                const productImages = order.items.map(item => item.image || "placeholder.jpg"); // Fallback for missing images
+                const statusClass = `status-${order.status.toLowerCase().replace(' ', '-')}`;
+
+                const orderHTML = `
+                    <div class="order_product">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                ${productImages.map(img => `<div class="swiper-slide"><img src="${img}" alt="Product Image"></div>`).join('')}
                             </div>
-                            <div class="order_texts">
-                                <p><i class="fas fa-tag"></i> Product/s Name:</p>
-                                <div class="product-names-container">
-                                    <span class="product-names">${productNames}</span>
-                                </div>
-                                <p><i class="fa-solid fa-user"></i> Customer Name: <span>${order.user_name}</span></p>
-                                <p class = "orderEmail"><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
-                                <p class = "orderPhone"><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
-                                <p><i class="fa-solid fa-map-marker-alt"></i> Address: <span>${order.user_address}</span></p>
-                                <p><i class="fa-solid fa-calendar"></i> Order Date: 
-                                    <span>${new Date(order.order_date).toLocaleDateString()} ${new Date(order.order_date).toLocaleTimeString()}</span>
-                                </p>
-                                <p><i class="fas fa-cubes"></i> Quantity: <span>${order.items.reduce((sum, item) => sum + (isNaN(item.quantity) ? 0 : item.quantity), 0)}</span></p>
-                                <p><i class="fas fa-dollar-sign"></i> Total Price: <span>₪${order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0).toFixed(2)}</span></p>
-                                <p><i class="fas fa-barcode"></i> Order Id: <span>#${order.order_id}</span></p>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                        <div class="order_texts">
+                            <p><i class="fas fa-tag"></i> Product/s Name:</p>
+                            <div class="product-names-container">
+                                <span class="product-names">${productNames}</span>
                             </div>
-                            <div class="status">
-                                <div class="status-dropdown">
-                                    <span class="current-status ${statusClass}">${order.status || 'Pending'}</span>
-                                    <div class="dropdown-content">
-                                        <p data-order-id="${order.order_id}" data-status="Pending">Pending</p>
-                                        <p data-order-id="${order.order_id}" data-status="In Progress">In Progress</p>
-                                        <p data-order-id="${order.order_id}" data-status="Delivered">Delivered</p>
-                                        <p data-order-id="${order.order_id}" data-status="Cancelled">Cancelled</p>
-                                    </div>
+                            <p><i class="fa-solid fa-user"></i> Customer Name: <span>${order.user_name}</span></p>
+                            <p class = "orderEmail"><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
+                            <p class = "orderPhone"><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
+                            <p><i class="fa-solid fa-map-marker-alt"></i> Address: <span>${order.user_address}</span></p>
+                            <p><i class="fa-solid fa-calendar"></i> Order Date: 
+                                <span>${new Date(order.order_date).toLocaleDateString()} ${new Date(order.order_date).toLocaleTimeString()}</span>
+                            </p>
+                            <p><i class="fas fa-cubes"></i> Quantity: <span>${order.items.reduce((sum, item) => sum + (isNaN(item.quantity) ? 0 : item.quantity), 0)}</span></p>
+                            <p><i class="fas fa-dollar-sign"></i> Total Price: <span>₪${order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0).toFixed(2)}</span></p>
+                            <p><i class="fas fa-barcode"></i> Order Id: <span>#${order.order_id}</span></p>
+                        </div>
+                        <div class="status">
+                            <div class="status-dropdown">
+                                <span class="current-status ${statusClass}">${order.status || 'Pending'}</span>
+                                <div class="dropdown-content">
+                                    <p data-order-id="${order.order_id}" data-status="Pending">Pending</p>
+                                    <p data-order-id="${order.order_id}" data-status="In Progress">In Progress</p>
+                                    <p data-order-id="${order.order_id}" data-status="Delivered">Delivered</p>
+                                    <p data-order-id="${order.order_id}" data-status="Cancelled">Cancelled</p>
                                 </div>
-                            </div>
-                            <div class="contact">
-                                <p><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
-                                <p><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
                             </div>
                         </div>
-                    `;
+                        <div class="contact">
+                            <p><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
+                            <p><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
+                        </div>
+                    </div>
+                `;
 
-                    // Append the order HTML to the order list
-                    orderList.innerHTML += orderHTML;
-                });
-
-                // Event listeners for dropdown items
-                const statusDropdownItems = ordersSection.querySelectorAll('.dropdown-content p');
-                statusDropdownItems.forEach(item => {
-                    item.addEventListener('click', () => {
-                        const orderId = item.getAttribute('data-order-id');
-                        const newStatus = item.getAttribute('data-status');
-                        updateStatus(orderId, newStatus);
-                    })
-                });
-
-                // Initialize Swipers for orders
-                const orderSwiperContainers = document.querySelectorAll(".swiper-container.order-swiper");
-                orderSwiperContainers.forEach(container => {
-                    const images = container.querySelectorAll("img");
-                    let loadedCount = 0;
-
-                    images.forEach(img => {
-                        img.addEventListener("load", () => {
-                            loadedCount++;
-                            if (loadedCount === images.length) {
-                                new Swiper(container, {
-                                    loop: true,
-                                    pagination: {
-                                        el: ".swiper-pagination",
-                                        clickable: true,
-                                    },
-                                    navigation: {
-                                        nextEl: ".swiper-button-next",
-                                        prevEl: ".swiper-button-prev",
-                                    },
-                                });
-                            }
-                        });
-
-                        img.addEventListener("error", () => {
-                            img.src = "placeholder.jpg"; // Fallback if image fails to load
-                            loadedCount++;
-                            if (loadedCount === images.length) {
-                                new Swiper(container, {
-                                    loop: true,
-                                    pagination: {
-                                        el: ".swiper-pagination",
-                                        clickable: true,
-                                    },
-                                    navigation: {
-                                        nextEl: ".swiper-button-next",
-                                        prevEl: ".swiper-button-prev",
-                                    },
-                                });
-                            }
-                        });
-                    });
-                });
-
-                resolve(); // Resolve promise after content and swiper initialization
-            })
-            .catch(error => {
-                console.error("Error fetching orders:", error);
-                reject(error); // Reject if there's an error
+                // Append the order HTML to the order list
+                orderList.innerHTML += orderHTML;
             });
+
+            // Handle the dropdown status change
+            const statusDropdownItems = ordersSection.querySelectorAll('.dropdown-content p');
+            statusDropdownItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const orderId = item.getAttribute('data-order-id');
+                    const newStatus = item.getAttribute('data-status');
+                    console.log(newStatus + " " + orderId);
+
+                    updateStatus(orderId, newStatus);
+                });
+            });
+
+            // Initialize Swiper after all orders are added
+            initializeSwipers();
+        })
+        .catch(error => console.error("Error fetching orders:", error));
+
+    // Add event listeners to tab buttons after rendering the HTML
+    const tabButtons = ordersSection.querySelectorAll(".tab-button");
+    tabButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const selectedFilter = button.getAttribute("data-filter");
+            displayOrders(selectedFilter); // Call displayOrders with the selected filter
+        });
+    });
+
+    // Add event listener for dropdown filter on mobile
+    const orderFilterDropdown = document.getElementById("order-filter-dropdown");
+    if (orderFilterDropdown) {
+        orderFilterDropdown.addEventListener("change", () => {
+            const selectedFilter = orderFilterDropdown.value;
+            displayOrders(selectedFilter);
+        });
+    }
+}
+
+// Initialize all Swipers after orders are rendered
+function initializeSwipers() {
+    const swiperContainers = document.querySelectorAll(".swiper-container");
+    swiperContainers.forEach(container => {
+        const images = container.querySelectorAll("img");
+        let loadedCount = 0;
+
+        images.forEach(img => {
+            img.addEventListener("load", () => {
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    new Swiper(container, {
+                        loop: true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: ".swiper-button-next",
+                            prevEl: ".swiper-button-prev",
+                        },
+                    });
+                }
+            });
+
+            // Handle image loading errors
+            img.addEventListener("error", () => {
+                img.src = "placeholder.jpg"; // Fallback to placeholder image
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    new Swiper(container, {
+                        loop: true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: ".swiper-button-next",
+                            prevEl: ".swiper-button-prev",
+                        },
+                    });
+                }
+            });
+        });
+    });
+}
+
+
+// Initialize all Swipers after orders are rendered
+function initializeSwipers() {
+    const swiperContainers = document.querySelectorAll(".swiper-container");
+    swiperContainers.forEach(container => {
+        const images = container.querySelectorAll("img");
+        let loadedCount = 0;
+
+        images.forEach(img => {
+            img.addEventListener("load", () => {
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    new Swiper(container, {
+                        loop: true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: ".swiper-button-next",
+                            prevEl: ".swiper-button-prev",
+                        },
+                    });
+                }
+            });
+
+            // Handle image loading errors
+            img.addEventListener("error", () => {
+                img.src = "placeholder.jpg"; // Fallback to placeholder image
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    new Swiper(container, {
+                        loop: true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: ".swiper-button-next",
+                            prevEl: ".swiper-button-prev",
+                        },
+                    });
+                }
+            });
+        });
     });
 }
 
