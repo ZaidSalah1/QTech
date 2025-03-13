@@ -707,7 +707,14 @@
         // Handle Upload Button Click
         document.querySelector('.btnAd').addEventListener('click', async () => {
             if (uploadedAdsImg.length > 0 || adsImages.length > 0) {
+
+                // Show the loading animation first
+                showLoadingEditAnimation();
+
                 const uploadedAdsImgURL = [];
+
+                // Set a timeout (for 2 seconds in this case) before starting the upload
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
                 // Upload new images to the server
                 for (const file of uploadedAdsImg) {
@@ -734,6 +741,7 @@
                     uploadedAdsImgURL: allAdsImages
                 };
 
+                // Send data to the server
                 const response = await fetch("/upload-ads", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -742,10 +750,12 @@
 
                 const data = await response.json();
                 console.log("Success:", data);
-                alert("Ads Data Saved")
+
+                // Hide loading animation and show success modal
+                hideLoadingEditAnimation();
+                showSuccessAdsModal();
             }
         });
-
 
         // Function to open modal
         function openModal(adId) {
@@ -1464,8 +1474,8 @@
             adsSectionWindow.style.display = 'none';
             repoertsContent.style.display = 'none';
             settingsSection.style.display = 'none';
-            editMainAdsWindow.style.display = 'none'; 
-                
+            editMainAdsWindow.style.display = 'none';
+
             // Show content based on selected menu item
             if (e.target.closest('#dashboardMenu')) {
                 dashboardContent.style.display = 'block';
@@ -1567,6 +1577,8 @@
 
 
 
+
+
     <!-- Success Modal -->
     <div id="successModal" class="successModal" style="display: none;">
         <div class="successModal-content">
@@ -1595,6 +1607,37 @@
             console.error('Error:', error);
             window.location.href = '/login.html'; // Redirect if any error occurs
         });
+</script>
+
+<script>
+    function showSuccessAdsModal() {
+    const modal = document.getElementById("successModal");
+    if (modal) {
+        modal.style.display = "flex"; // Show modal
+        document.getElementById("overlay").style.display = "block";
+        document.querySelector('.modal_msg').textContent = "Ads Updated successfully.";
+    }
+
+    // Auto-close modal after 3.5 seconds
+    setTimeout(() => {
+        modal.style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+        window.location.reload();
+    }, 3000);
+}
+
+
+    // Function to show the loading animation
+    function showLoadingEditAnimation() {
+        document.getElementById("loadingAnimation").style.display = "flex";
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    // Function to hide the loading animation
+    function hideLoadingEditAnimation() {
+        document.getElementById("loadingAnimation").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
 </script>
 
 
