@@ -655,10 +655,14 @@ function displayOrders(filter = "All Orders") {
 
     const orderList = ordersSection.querySelector(".order-list");
 
-    // Fetch orders from the server wrapped in a Promise
+    // Fetch orders from the server
     fetch("/orders")
         .then(response => response.json())
         .then(orders => {
+            // if (orders.length > 0) {
+            //     ordersSection.style.display = "block";
+            // }
+
             // Clear existing orders
             orderList.innerHTML = "";
 
@@ -667,6 +671,7 @@ function displayOrders(filter = "All Orders") {
                 filter === "All Orders" || order.status === filter
             );
 
+            // Sort orders by order_date (descending) in case there is any issue with the backend
             // Sort orders by order_date (newest to oldest)
             const sortedOrders = [...filteredOrders].sort((a, b) => {
                 return new Date(b.order_date).getTime() - new Date(a.order_date).getTime();
@@ -724,7 +729,7 @@ function displayOrders(filter = "All Orders") {
                 orderList.innerHTML += orderHTML;
             });
 
-            // Handle the dropdown status change
+
             const statusDropdownItems = ordersSection.querySelectorAll('.dropdown-content p');
             statusDropdownItems.forEach(item => {
                 item.addEventListener('click', () => {
@@ -733,11 +738,54 @@ function displayOrders(filter = "All Orders") {
                     console.log(newStatus + " " + orderId);
 
                     updateStatus(orderId, newStatus);
-                });
-            });
+                })
+            })
+
 
             // Initialize Swiper after all orders are added
-            initializeSwipers();
+            const swiperContainers = document.querySelectorAll(".swiper-container");
+            swiperContainers.forEach(container => {
+                const images = container.querySelectorAll("img");
+                let loadedCount = 0;
+
+                images.forEach(img => {
+                    img.addEventListener("load", () => {
+                        loadedCount++;
+                        if (loadedCount === images.length) {
+                            new Swiper(container, {
+                                loop: true,
+                                pagination: {
+                                    el: ".swiper-pagination",
+                                    clickable: true,
+                                },
+                                navigation: {
+                                    nextEl: ".swiper-button-next",
+                                    prevEl: ".swiper-button-prev",
+                                },
+                            });
+                        }
+                    });
+
+                    // Handle image loading errors
+                    img.addEventListener("error", () => {
+                        img.src = "placeholder.jpg"; // Fallback to placeholder image
+                        loadedCount++;
+                        if (loadedCount === images.length) {
+                            new Swiper(container, {
+                                loop: true,
+                                pagination: {
+                                    el: ".swiper-pagination",
+                                    clickable: true,
+                                },
+                                navigation: {
+                                    nextEl: ".swiper-button-next",
+                                    prevEl: ".swiper-button-prev",
+                                },
+                            });
+                        }
+                    });
+                });
+            });
         })
         .catch(error => console.error("Error fetching orders:", error));
 
@@ -758,53 +806,6 @@ function displayOrders(filter = "All Orders") {
             displayOrders(selectedFilter);
         });
     }
-}
-
-// Initialize all Swipers after orders are rendered
-function initializeSwipers() {
-    const swiperContainers = document.querySelectorAll(".swiper-container");
-    swiperContainers.forEach(container => {
-        const images = container.querySelectorAll("img");
-        let loadedCount = 0;
-
-        images.forEach(img => {
-            img.addEventListener("load", () => {
-                loadedCount++;
-                if (loadedCount === images.length) {
-                    new Swiper(container, {
-                        loop: true,
-                        pagination: {
-                            el: ".swiper-pagination",
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: ".swiper-button-next",
-                            prevEl: ".swiper-button-prev",
-                        },
-                    });
-                }
-            });
-
-            // Handle image loading errors
-            img.addEventListener("error", () => {
-                img.src = "placeholder.jpg"; // Fallback to placeholder image
-                loadedCount++;
-                if (loadedCount === images.length) {
-                    new Swiper(container, {
-                        loop: true,
-                        pagination: {
-                            el: ".swiper-pagination",
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: ".swiper-button-next",
-                            prevEl: ".swiper-button-prev",
-                        },
-                    });
-                }
-            });
-        });
-    });
 }
 
 
