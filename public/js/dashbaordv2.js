@@ -679,63 +679,62 @@ function displayOrders(filter = "All Orders") {
                     const statusClass = `status-${order.status.toLowerCase().replace(' ', '-')}`;
 
                     const orderHTML = `
-        <div class="order_product">
-            <div class="swiper-container order-swiper"> <!-- Changed to order-swiper -->
-                <div class="swiper-wrapper">
-                    ${productImages.map(img => `<div class="swiper-slide"><img src="${img}" alt="Product Image"></div>`).join('')}
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
-            <div class="order_texts">
-                <p><i class="fas fa-tag"></i> Product/s Name:</p>
-                <div class="product-names-container">
-                    <span class="product-names">${productNames}</span>
-                </div>
-                <p><i class="fa-solid fa-user"></i> Customer Name: <span>${order.user_name}</span></p>
-                <p class = "orderEmail"><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
-                <p class = "orderPhone"><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
-                <p><i class="fa-solid fa-map-marker-alt"></i> Address: <span>${order.user_address}</span></p>
-                <p><i class="fa-solid fa-calendar"></i> Order Date: 
-                    <span>${new Date(order.order_date).toLocaleDateString()} ${new Date(order.order_date).toLocaleTimeString()}</span>
-                </p>
-                <p><i class="fas fa-cubes"></i> Quantity: <span>${order.items.reduce((sum, item) => sum + (isNaN(item.quantity) ? 0 : item.quantity), 0)}</span></p>
-                <p><i class="fas fa-dollar-sign"></i> Total Price: <span>₪${order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0).toFixed(2)}</span></p>
-                <p><i class="fas fa-barcode"></i> Order Id: <span>#${order.order_id}</span></p>
-            </div>
-            <div class="status">
-                <div class="status-dropdown">
-                    <span class="current-status ${statusClass}">${order.status || 'Pending'}</span>
-                    <div class="dropdown-content">
-                        <p data-order-id="${order.order_id}" data-status="Pending">Pending</p>
-                        <p data-order-id="${order.order_id}" data-status="In Progress">In Progress</p>
-                        <p data-order-id="${order.order_id}" data-status="Delivered">Delivered</p>
-                        <p data-order-id="${order.order_id}" data-status="Cancelled">Cancelled</p>
-                    </div>
-                </div>
-            </div>
-            <div class="contact">
-                <p><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
-                <p><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
-            </div>
-        </div>
-    `;
+                        <div class="order_product">
+                            <div class="swiper-container order-swiper">
+                                <div class="swiper-wrapper">
+                                    ${productImages.map(img => `<div class="swiper-slide"><img src="${img}" alt="Product Image"></div>`).join('')}
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                            <div class="order_texts">
+                                <p><i class="fas fa-tag"></i> Product/s Name:</p>
+                                <div class="product-names-container">
+                                    <span class="product-names">${productNames}</span>
+                                </div>
+                                <p><i class="fa-solid fa-user"></i> Customer Name: <span>${order.user_name}</span></p>
+                                <p class = "orderEmail"><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
+                                <p class = "orderPhone"><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
+                                <p><i class="fa-solid fa-map-marker-alt"></i> Address: <span>${order.user_address}</span></p>
+                                <p><i class="fa-solid fa-calendar"></i> Order Date: 
+                                    <span>${new Date(order.order_date).toLocaleDateString()} ${new Date(order.order_date).toLocaleTimeString()}</span>
+                                </p>
+                                <p><i class="fas fa-cubes"></i> Quantity: <span>${order.items.reduce((sum, item) => sum + (isNaN(item.quantity) ? 0 : item.quantity), 0)}</span></p>
+                                <p><i class="fas fa-dollar-sign"></i> Total Price: <span>₪${order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0).toFixed(2)}</span></p>
+                                <p><i class="fas fa-barcode"></i> Order Id: <span>#${order.order_id}</span></p>
+                            </div>
+                            <div class="status">
+                                <div class="status-dropdown">
+                                    <span class="current-status ${statusClass}">${order.status || 'Pending'}</span>
+                                    <div class="dropdown-content">
+                                        <p data-order-id="${order.order_id}" data-status="Pending">Pending</p>
+                                        <p data-order-id="${order.order_id}" data-status="In Progress">In Progress</p>
+                                        <p data-order-id="${order.order_id}" data-status="Delivered">Delivered</p>
+                                        <p data-order-id="${order.order_id}" data-status="Cancelled">Cancelled</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="contact">
+                                <p><i class="fa-solid fa-envelope"></i> Email: <span>${order.user_email}</span></p>
+                                <p><i class="fa-solid fa-phone"></i> Phone: <span>${order.user_phone}</span></p>
+                            </div>
+                        </div>
+                    `;
 
                     // Append the order HTML to the order list
                     orderList.innerHTML += orderHTML;
                 });
 
+                // Event listeners for dropdown items
                 const statusDropdownItems = ordersSection.querySelectorAll('.dropdown-content p');
                 statusDropdownItems.forEach(item => {
                     item.addEventListener('click', () => {
                         const orderId = item.getAttribute('data-order-id');
                         const newStatus = item.getAttribute('data-status');
-                        console.log(newStatus + " " + orderId);
-
                         updateStatus(orderId, newStatus);
                     })
                 });
 
-                // Initialize Swipers specifically for orders
+                // Initialize Swipers for orders
                 const orderSwiperContainers = document.querySelectorAll(".swiper-container.order-swiper");
                 orderSwiperContainers.forEach(container => {
                     const images = container.querySelectorAll("img");
@@ -759,9 +758,8 @@ function displayOrders(filter = "All Orders") {
                             }
                         });
 
-                        // Handle image loading errors
                         img.addEventListener("error", () => {
-                            img.src = "placeholder.jpg"; // Fallback to placeholder image if error occurs
+                            img.src = "placeholder.jpg"; // Fallback if image fails to load
                             loadedCount++;
                             if (loadedCount === images.length) {
                                 new Swiper(container, {
@@ -780,30 +778,12 @@ function displayOrders(filter = "All Orders") {
                     });
                 });
 
-                resolve(); // Resolve the promise after all content is loaded and swipers are initialized
+                resolve(); // Resolve promise after content and swiper initialization
             })
             .catch(error => {
                 console.error("Error fetching orders:", error);
-                reject(error); // Reject the promise if an error occurs
+                reject(error); // Reject if there's an error
             });
-
-        // Add event listeners to tab buttons after rendering the HTML
-        const tabButtons = ordersSection.querySelectorAll(".tab-button");
-        tabButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                const selectedFilter = button.getAttribute("data-filter");
-                displayOrders(selectedFilter); // Call displayOrders with the selected filter
-            });
-        });
-
-        // Add event listener for dropdown filter on mobile
-        const orderFilterDropdown = document.getElementById("order-filter-dropdown");
-        if (orderFilterDropdown) {
-            orderFilterDropdown.addEventListener("change", () => {
-                const selectedFilter = orderFilterDropdown.value;
-                displayOrders(selectedFilter);
-            });
-        }
     });
 }
 
